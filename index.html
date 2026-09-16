@@ -44,14 +44,10 @@
     </script>
     <style>
         body { background-color: #fdfbf7; overflow-x: hidden; scroll-behavior: smooth; }
-        
-        /* Premium Shadows & Glass effects */
         .smooth-shadow { box-shadow: 0 20px 40px -15px rgba(0,0,0,0.06); }
         .glass-nav { background: rgba(253, 251, 247, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.6); }
         .glass-modal { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.9); }
         .radial-glow { background: radial-gradient(circle at bottom, rgba(217, 75, 56, 0.08) 0%, rgba(253, 251, 247, 0) 60%); }
-
-        /* Animation Delays */
         .delay-100 { animation-delay: 100ms; } .delay-200 { animation-delay: 200ms; } 
         .delay-300 { animation-delay: 300ms; } .delay-400 { animation-delay: 400ms; }
         .delay-500 { animation-delay: 500ms; }
@@ -82,7 +78,6 @@
     <!-- Main Hero Section -->
     <main class="flex flex-col items-center justify-center px-4 pt-36 pb-24 z-10 w-full max-w-5xl mx-auto text-center">
         
-        <!-- Animated Feature Pills -->
         <div class="opacity-0 animate-fade-in-up delay-100 inline-flex flex-wrap justify-center items-center gap-4 bg-white px-6 py-2.5 rounded-full shadow-sm border border-gray-100 text-xs md:text-sm font-semibold text-gray-400 mb-10 hover:shadow-md transition-shadow cursor-default">
             <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-orange relative"><span class="absolute inset-0 rounded-full bg-brand-orange animate-ping opacity-75"></span></span> Learn AI</span>
             <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-gray-200"></span> AI Skills</span>
@@ -90,26 +85,20 @@
             <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-gray-200"></span> AI Expert</span>
         </div>
 
-        <!-- Headline -->
         <h1 class="opacity-0 animate-fade-in-up delay-200 text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-brand-dark mb-6 leading-[1.15]">
             Where Learning Meets <br/>
             <span class="text-brand-orange font-serif italic font-medium">Artificial Intelligence</span>
         </h1>
 
-        <!-- Subheadline -->
         <p class="opacity-0 animate-fade-in-up delay-300 max-w-2xl mx-auto text-gray-500 text-sm md:text-base leading-relaxed mb-10 px-4">
             VERTEX helps you move beyond theory by learning AI through hands-on projects, structured roadmaps, and mentor-driven guidance built to support real career growth.
         </p>
 
-        <!-- CTA Button -->
         <button onclick="openModal()" class="opacity-0 animate-fade-in-up delay-400 bg-brand-orange text-white px-8 py-3.5 rounded text-sm md:text-base font-semibold hover:bg-red-700 shadow-lg shadow-orange-500/25 transition-all mb-16 md:mb-20 hover:-translate-y-1 active:scale-95">
             Book a Free Demo
         </button>
 
-        <!-- 3 Cards Section -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full px-2 md:px-0">
-            
-            <!-- Left Card: Mission -->
             <div class="opacity-0 animate-fade-in-up delay-300 bg-white rounded-2xl p-6 md:p-8 smooth-shadow border border-gray-50 text-left flex flex-col justify-between transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group">
                 <div>
                     <h3 class="font-bold text-brand-dark text-lg mb-3">A mission to build the next generation.</h3>
@@ -121,7 +110,6 @@
                 </div>
             </div>
 
-            <!-- Center Card: Robot AI (Floating) -->
             <div class="opacity-0 animate-fade-in-up delay-400 bg-white rounded-2xl smooth-shadow border border-gray-50 flex items-center justify-center p-6 min-h-[220px] md:min-h-[250px] transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group relative">
                 <div class="relative z-10 w-32 h-32 bg-gray-50 rounded-full shadow-inner flex flex-col items-center justify-center border border-gray-100 group-hover:scale-105 transition-transform duration-500 animate-float">
                     <span class="text-5xl">🤖</span>
@@ -131,7 +119,6 @@
                 </div>
             </div>
 
-            <!-- Right Card: Testimonial -->
             <div class="opacity-0 animate-fade-in-up delay-500 bg-white rounded-2xl p-6 md:p-8 smooth-shadow border border-gray-50 text-left flex flex-col justify-between transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group">
                 <div>
                     <div class="text-brand-orange text-4xl font-serif leading-none mb-2 transform group-hover:-translate-y-1 transition-transform">"</div>
@@ -149,7 +136,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </main>
 
@@ -170,13 +156,14 @@
         </div>
     </div>
 
-    <!-- SUPABASE ENGINE (Keys Inserted) -->
+    <!-- SUPABASE ENGINE SCRIPT (FIXED) -->
     <script>
-        // Exact Keys Injected - Ready for Production
+        // Keys
         const supabaseUrl = 'https://memwikauqfvctwbrgmgf.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lbXdpa2F1cWZ2Y3R3YnJnbWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1Njc4NDcsImV4cCI6MjEwNTE0Mzg0N30.f1MbDY5DGxaYwVnOBrN8N0ODWe9ZpYGmiL2NfvyIBCo';
         
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        // FIX: Changed variable name to 'supabaseClient' to prevent crashing the global engine
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
         const modal = document.getElementById('waitlistModal');
         const modalBox = document.getElementById('modalBox');
@@ -214,7 +201,8 @@
             btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Saving...`;
             errorMsg.classList.add('hidden');
 
-            const { data, error } = await supabase.from('waitlist').insert([{ email: email }]);
+            // FIX: Using the newly named 'supabaseClient'
+            const { data, error } = await supabaseClient.from('waitlist').insert([{ email: email }]);
 
             if (error) {
                 errorMsg.innerText = "Error: " + error.message;

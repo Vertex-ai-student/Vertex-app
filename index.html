@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>VERTEX AI | The AI Operating System</title>
-    <!-- Tailwind CSS for Styling -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Premium Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
@@ -17,10 +17,21 @@
                         serif: ['"Playfair Display"', 'serif'],
                     },
                     colors: {
-                        brand: {
-                            orange: '#d94b38', /* Exact coral/orange from your image */
-                            light: '#fdfbf7',  /* Warm cream background */
-                            dark: '#111827'
+                        brand: { orange: '#d94b38', light: '#fdfbf7', dark: '#111827' }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(40px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
                         }
                     }
                 }
@@ -28,104 +39,136 @@
         }
     </script>
     <style>
-        body { background-color: #fdfbf7; }
-        /* Soft warm glow at the bottom like the image */
+        body { background-color: #fdfbf7; overflow-x: hidden; }
+        
+        /* High-tech Clean Glassmorphism */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,1);
+        }
+        
+        .glass-nav {
+            background: rgba(253, 251, 247, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
         .radial-glow {
-            background: radial-gradient(circle at bottom, rgba(217, 75, 56, 0.12) 0%, rgba(253, 251, 247, 0) 60%);
+            background: radial-gradient(circle at center, rgba(217, 75, 56, 0.05) 0%, rgba(253, 251, 247, 0) 70%);
         }
-        .smooth-shadow {
-            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.06);
-        }
+
+        /* Staggered Animation Delays */
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        .delay-500 { animation-delay: 500ms; }
     </style>
 </head>
-<body class="min-h-screen relative text-brand-dark overflow-x-hidden flex flex-col font-sans">
-    <!-- Warm Background Glow -->
-    <div class="absolute inset-0 radial-glow -z-10 pointer-events-none h-full"></div>
+<body class="min-h-screen relative text-brand-dark font-sans selection:bg-brand-orange selection:text-white">
+    
+    <!-- Animated Ambient Background Glows -->
+    <div class="absolute inset-0 radial-glow -z-10 h-screen w-full animate-pulse-slow"></div>
+    <div class="absolute top-20 left-10 w-72 h-72 bg-orange-200/40 rounded-full mix-blend-multiply filter blur-[80px] animate-float delay-100 -z-10"></div>
+    <div class="absolute bottom-20 right-10 w-80 h-80 bg-blue-100/50 rounded-full mix-blend-multiply filter blur-[80px] animate-float delay-300 -z-10"></div>
 
-    <!-- Navigation -->
-    <nav class="max-w-7xl mx-auto w-full px-6 py-8 flex justify-between items-center z-10">
-        <div class="text-xl md:text-2xl font-bold tracking-tight text-brand-orange">
-            VERTEX <span class="text-brand-dark">AI</span>
+    <!-- Sticky Glass Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl md:text-2xl font-bold tracking-tight text-brand-orange hover:scale-105 transition-transform cursor-pointer">
+                VERTEX <span class="text-brand-dark">AI</span>
+            </div>
+            <div class="hidden md:flex gap-10 text-sm font-medium text-gray-500">
+                <a href="#" class="hover:text-brand-dark transition-colors">Courses</a>
+                <a href="#" class="hover:text-brand-dark transition-colors">Roadmap</a>
+                <a href="#" class="hover:text-brand-dark transition-colors">Webinar</a>
+            </div>
+            <button class="bg-black text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:scale-95">
+                Join the Waitlist
+            </button>
         </div>
-        <div class="hidden md:flex gap-10 text-sm font-medium text-gray-500">
-            <a href="#" class="hover:text-brand-dark transition-colors">Courses</a>
-            <a href="#" class="hover:text-brand-dark transition-colors">Roadmap</a>
-            <a href="#" class="hover:text-brand-dark transition-colors">Webinar</a>
-        </div>
-        <button class="bg-black text-white px-6 py-2.5 rounded-md text-sm font-medium hover:bg-gray-800 transition-all shadow-md">
-            Join the Waitlist
-        </button>
     </nav>
 
     <!-- Main Hero Section -->
-    <main class="flex-grow flex flex-col items-center justify-center px-4 pt-8 md:pt-12 pb-24 z-10 w-full max-w-5xl mx-auto text-center">
+    <main class="flex flex-col items-center justify-center px-4 pt-36 pb-24 z-10 w-full max-w-6xl mx-auto text-center">
         
-        <!-- Feature Pills -->
-        <div class="inline-flex flex-wrap justify-center items-center gap-4 bg-white px-6 py-2.5 rounded-full shadow-sm border border-gray-100 text-xs md:text-sm font-semibold text-gray-400 mb-10">
-            <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-orange"></span> Learn AI</span>
-            <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-gray-200"></span> AI Skills</span>
-            <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-gray-200"></span> Smart Learning</span>
-            <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-gray-200"></span> AI Expert</span>
+        <!-- Animated Pill -->
+        <div class="opacity-0 animate-fade-in-up delay-100 inline-flex flex-wrap justify-center items-center gap-4 glass-panel px-6 py-2.5 rounded-full text-xs md:text-sm font-semibold text-gray-500 mb-10 hover:scale-105 transition-transform duration-300 cursor-default">
+            <span class="flex items-center gap-2 relative">
+                <span class="w-2 h-2 rounded-full bg-brand-orange animate-ping absolute opacity-75"></span>
+                <span class="w-2 h-2 rounded-full bg-brand-orange relative z-10"></span> 
+                Learn AI
+            </span>
+            <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span> AI Skills</span>
+            <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span> Smart Learning</span>
         </div>
 
-        <!-- Headline -->
-        <h1 class="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-brand-dark mb-6 leading-[1.15]">
+        <!-- Animated Headline -->
+        <h1 class="opacity-0 animate-fade-in-up delay-200 text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-brand-dark mb-6 leading-[1.15]">
             Where Learning Meets <br/>
-            <span class="text-brand-orange font-serif italic font-medium">Artificial Intelligence</span>
+            <span class="text-brand-orange font-serif italic font-medium relative inline-block">
+                Artificial Intelligence
+                <div class="absolute -bottom-2 left-0 w-full h-1 bg-brand-orange/20 rounded-full"></div>
+            </span>
         </h1>
 
-        <!-- Subheadline -->
-        <p class="max-w-2xl mx-auto text-gray-500 text-sm md:text-base leading-relaxed mb-10 px-4">
+        <!-- Animated Subheadline -->
+        <p class="opacity-0 animate-fade-in-up delay-300 max-w-2xl mx-auto text-gray-500 text-base md:text-lg leading-relaxed mb-10 px-4">
             VERTEX helps you move beyond theory by learning AI through hands-on projects, structured roadmaps, and mentor-driven guidance built to support real career growth.
         </p>
 
-        <!-- Main Call to Action -->
-        <button class="bg-brand-orange text-white px-8 py-3.5 rounded text-sm md:text-base font-semibold hover:bg-red-700 shadow-lg shadow-orange-500/25 transition-all mb-16 md:mb-20">
-            Book a Free Demo
+        <!-- Animated Button -->
+        <button class="opacity-0 animate-fade-in-up delay-400 bg-brand-orange text-white px-8 py-4 rounded-full text-sm md:text-base font-bold hover:bg-[#b83b2a] shadow-[0_10px_30px_rgba(217,75,56,0.3)] hover:shadow-[0_15px_40px_rgba(217,75,56,0.45)] transition-all duration-300 hover:-translate-y-1 mb-20 group relative overflow-hidden">
+            <span class="relative z-10">Book a Free Demo</span>
+            <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out z-0"></div>
         </button>
 
-        <!-- 3 Visual Cards Section -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full px-2 md:px-0">
+        <!-- 3 Glassmorphism Animated Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full px-2 md:px-0">
             
-            <!-- Left Card: Mission -->
-            <div class="bg-white rounded-2xl p-6 md:p-8 smooth-shadow border border-gray-50 text-left flex flex-col justify-between transform hover:-translate-y-1 transition-transform duration-300">
+            <!-- Card 1 -->
+            <div class="opacity-0 animate-fade-in-up delay-300 glass-panel rounded-3xl p-8 text-left flex flex-col justify-between transform hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 group">
                 <div>
-                    <h3 class="font-bold text-brand-dark text-lg mb-3">A mission to build the next generation.</h3>
-                    <p class="text-gray-400 text-xs md:text-sm leading-relaxed">We aren't just teaching tools; we are shaping the minds that will build the future.</p>
+                    <div class="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-sm">🎯</div>
+                    <h3 class="font-bold text-brand-dark text-xl mb-3">A mission to build the next generation.</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">We aren't just teaching tools; we are shaping the minds that will build the future.</p>
                 </div>
-                <div class="text-[11px] font-bold text-brand-orange pt-6 mt-6 border-t border-gray-50">
-                    Founder L, CEO
+                <div class="text-xs font-bold text-brand-orange pt-6 mt-6 border-t border-gray-200/50 flex items-center gap-2">
+                    <span>L</span> <span class="text-gray-300">•</span> <span>Founder & CEO</span>
                 </div>
             </div>
 
-            <!-- Center Card: Robot / Video Graphic -->
-            <div class="bg-white rounded-2xl smooth-shadow border border-gray-50 flex items-center justify-center p-6 min-h-[220px] md:min-h-[250px] transform hover:-translate-y-1 transition-transform duration-300 group relative">
-                <!-- Abstract AI Graphic -->
-                <div class="relative z-10 w-32 h-32 bg-gray-50 rounded-full shadow-inner flex flex-col items-center justify-center border border-gray-100 group-hover:scale-105 transition-transform duration-500">
-                    <span class="text-5xl">🤖</span>
-                    <!-- Play Button Overlay -->
-                    <div class="absolute -bottom-3 right-0 w-12 h-12 bg-brand-orange rounded-full flex items-center justify-center shadow-xl text-white pl-1 cursor-pointer hover:bg-red-700 transition-colors">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <!-- Card 2 (Robot AI) -->
+            <div class="opacity-0 animate-fade-in-up delay-400 glass-panel rounded-3xl flex items-center justify-center p-8 min-h-[280px] transform hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 group relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent z-0"></div>
+                <div class="relative z-10 w-40 h-40 bg-white rounded-full shadow-2xl flex flex-col items-center justify-center border-4 border-white/80 animate-float group-hover:scale-110 transition-transform duration-700">
+                    <span class="text-6xl drop-shadow-md group-hover:animate-pulse">🤖</span>
+                    <!-- Play Button -->
+                    <div class="absolute -bottom-4 right-0 w-14 h-14 bg-brand-orange rounded-full flex items-center justify-center shadow-[0_10px_20px_rgba(217,75,56,0.4)] text-white pl-1 cursor-pointer hover:bg-[#b83b2a] hover:scale-110 active:scale-95 transition-all">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Card: Testimonial -->
-            <div class="bg-white rounded-2xl p-6 md:p-8 smooth-shadow border border-gray-50 text-left flex flex-col justify-between transform hover:-translate-y-1 transition-transform duration-300">
+            <!-- Card 3 (Testimonial & Avatar updated to Aditya) -->
+            <div class="opacity-0 animate-fade-in-up delay-500 glass-panel rounded-3xl p-8 text-left flex flex-col justify-between transform hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 group">
                 <div>
-                    <div class="text-brand-orange text-4xl font-serif leading-none mb-2">"</div>
-                    <p class="text-gray-500 text-xs md:text-sm font-medium leading-relaxed italic">
+                    <div class="text-brand-orange text-6xl font-serif leading-none h-10 mb-4 opacity-50 group-hover:opacity-100 group-hover:-translate-y-1 transition-all">"</div>
+                    <p class="text-gray-600 text-sm font-medium leading-relaxed italic relative z-10">
                         Student Project Success Rate: This shows how well students are doing with their projects!
                     </p>
                 </div>
-                <div class="flex items-center gap-3 mt-6 pt-6 border-t border-gray-50">
-                    <!-- Avatar -->
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-orange-100 to-orange-50 flex items-center justify-center border border-orange-200 overflow-hidden">
-                        <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Adarsh&backgroundColor=fdfbf7" alt="Avatar" class="w-full h-full object-cover">
+                <div class="flex items-center gap-4 mt-8 pt-6 border-t border-gray-200/50">
+                    <div class="w-11 h-11 rounded-full bg-white flex items-center justify-center border-2 border-white shadow-md overflow-hidden group-hover:scale-110 transition-transform">
+                        <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Aditya&backgroundColor=d94b38" alt="Aditya" class="w-full h-full object-cover">
                     </div>
                     <div>
-                        <div class="text-[11px] font-bold text-brand-dark uppercase tracking-wide">Adarsh Singh</div>
-                        <div class="text-[9px] text-gray-400">B.Sc CS Student</div>
+                        <div class="text-sm font-bold text-brand-dark tracking-wide">Aditya Singh</div>
+                        <div class="text-[10px] text-gray-500 font-bold uppercase tracking-wider mt-0.5">B.Sc CS Student</div>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VERTEX AI | The AI Operating System</title>
+    <!-- Tailwind CSS for Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Premium Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            orange: '#d94b38', /* Exact coral/orange from your image */
+                            light: '#fdfbf7',  /* Warm cream background */
+                            dark: '#111827'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #fdfbf7; }
+        /* Soft warm glow at the bottom like the image */
+        .radial-glow {
+            background: radial-gradient(circle at bottom, rgba(217, 75, 56, 0.12) 0%, rgba(253, 251, 247, 0) 60%);
+        }
+        .smooth-shadow {
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.06);
+        }
+    </style>
+</head>
+<body class="min-h-screen relative text-brand-dark overflow-x-hidden flex flex-col font-sans">
+    <!-- Warm Background Glow -->
+    <div class="absolute inset-0 radial-glow -z-10 pointer-events-none h-full"></div>
+
+    <!-- Navigation -->
+    <nav class="max-w-7xl mx-auto w-full px-6 py-8 flex justify-between items-center z-10">
+        <div class="text-xl md:text-2xl font-bold tracking-tight text-brand-orange">
+            VERTEX <span class="text-brand-dark">AI</span>
+        </div>
+        <div class="hidden md:flex gap-10 text-sm font-medium text-gray-500">
+            <a href="#" class="hover:text-brand-dark transition-colors">Courses</a>
+            <a href="#" class="hover:text-brand-dark transition-colors">Roadmap</a>
+            <a href="#" class="hover:text-brand-dark transition-colors">Webinar</a>
+        </div>
+        <button class="bg-black text-white px-6 py-2.5 rounded-md text-sm font-medium hover:bg-gray-800 transition-all shadow-md">
+            Join the Waitlist
+        </button>
+    </nav>
+
+    <!-- Main Hero Section -->
+    <main class="flex-grow flex flex-col items-center justify-center px-4 pt-8 md:pt-12 pb-24 z-10 w-full max-w-5xl mx-auto text-center">
+        
+        <!-- Feature Pills -->
+        <div class="inline-flex flex-wrap justify-center items-center gap-4 bg-white px-6 py-2.5 rounded-full shadow-sm border border-gray-100 text-xs md:text-sm font-semibold text-gray-400 mb-10">
+            <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-orange"></span> Learn AI</span>
+            <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-gray-200"></span> AI Skills</span>
+            <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-gray-200"></span> Smart Learning</span>
+            <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-gray-200"></span> AI Expert</span>
+        </div>
+
+        <!-- Headline -->
+        <h1 class="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-brand-dark mb-6 leading-[1.15]">
+            Where Learning Meets <br/>
+            <span class="text-brand-orange font-serif italic font-medium">Artificial Intelligence</span>
+        </h1>
+
+        <!-- Subheadline -->
+        <p class="max-w-2xl mx-auto text-gray-500 text-sm md:text-base leading-relaxed mb-10 px-4">
+            VERTEX helps you move beyond theory by learning AI through hands-on projects, structured roadmaps, and mentor-driven guidance built to support real career growth.
+        </p>
+
+        <!-- Main Call to Action -->
+        <button class="bg-brand-orange text-white px-8 py-3.5 rounded text-sm md:text-base font-semibold hover:bg-red-700 shadow-lg shadow-orange-500/25 transition-all mb-16 md:mb-20">
+            Book a Free Demo
+        </button>
+
+        <!-- 3 Visual Cards Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full px-2 md:px-0">
+            
+            <!-- Left Card: Mission -->
+            <div class="bg-white rounded-2xl p-6 md:p-8 smooth-shadow border border-gray-50 text-left flex flex-col justify-between transform hover:-translate-y-1 transition-transform duration-300">
+                <div>
+                    <h3 class="font-bold text-brand-dark text-lg mb-3">A mission to build the next generation.</h3>
+                    <p class="text-gray-400 text-xs md:text-sm leading-relaxed">We aren't just teaching tools; we are shaping the minds that will build the future.</p>
+                </div>
+                <div class="text-[11px] font-bold text-brand-orange pt-6 mt-6 border-t border-gray-50">
+                    Founder L, CEO
+                </div>
+            </div>
+
+            <!-- Center Card: Robot / Video Graphic -->
+            <div class="bg-white rounded-2xl smooth-shadow border border-gray-50 flex items-center justify-center p-6 min-h-[220px] md:min-h-[250px] transform hover:-translate-y-1 transition-transform duration-300 group relative">
+                <!-- Abstract AI Graphic -->
+                <div class="relative z-10 w-32 h-32 bg-gray-50 rounded-full shadow-inner flex flex-col items-center justify-center border border-gray-100 group-hover:scale-105 transition-transform duration-500">
+                    <span class="text-5xl">🤖</span>
+                    <!-- Play Button Overlay -->
+                    <div class="absolute -bottom-3 right-0 w-12 h-12 bg-brand-orange rounded-full flex items-center justify-center shadow-xl text-white pl-1 cursor-pointer hover:bg-red-700 transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Card: Testimonial -->
+            <div class="bg-white rounded-2xl p-6 md:p-8 smooth-shadow border border-gray-50 text-left flex flex-col justify-between transform hover:-translate-y-1 transition-transform duration-300">
+                <div>
+                    <div class="text-brand-orange text-4xl font-serif leading-none mb-2">"</div>
+                    <p class="text-gray-500 text-xs md:text-sm font-medium leading-relaxed italic">
+                        Student Project Success Rate: This shows how well students are doing with their projects!
+                    </p>
+                </div>
+                <div class="flex items-center gap-3 mt-6 pt-6 border-t border-gray-50">
+                    <!-- Avatar -->
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-orange-100 to-orange-50 flex items-center justify-center border border-orange-200 overflow-hidden">
+                        <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Adarsh&backgroundColor=fdfbf7" alt="Avatar" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <div class="text-[11px] font-bold text-brand-dark uppercase tracking-wide">Adarsh Singh</div>
+                        <div class="text-[9px] text-gray-400">B.Sc CS Student</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>

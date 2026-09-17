@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VERTEX | Secure Authentication</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* Base Variables (No Neon, Premium Matte) */
+        :root {
+            --bg-image: url('https://images.unsplash.com/photo-1505909182942-e2f09aee3e89?q=80&w=2072&auto=format&fit=crop');
+            --overlay: rgba(253, 251, 247, 0.4);
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-border: rgba(255, 255, 255, 0.6);
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --accent: #d94b38; /* Coral */
+        }
+
+        /* 1. Dark Theme */
+        .theme-dark {
+            --bg-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop');
+            --overlay: rgba(15, 23, 42, 0.6);
+            --card-bg: rgba(15, 23, 42, 0.85);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6; /* Blue */
+        }
+
+        /* 2. Naruto (Hidden Leaf / Warm Orange Vibe) */
+        .theme-naruto {
+            --bg-image: url('https://images.unsplash.com/photo-1471922694854-ff1b63b20054?q=80&w=2072&auto=format&fit=crop');
+            --overlay: rgba(0, 0, 0, 0.6);
+            --card-bg: rgba(20, 20, 20, 0.85);
+            --card-border: rgba(249, 115, 22, 0.3);
+            --text-main: #ffffff;
+            --text-muted: #d1d5db;
+            --accent: #f97316; /* Orange */
+        }
+
+        /* 3. One Piece (Grand Line / Ocean Vibe) */
+        .theme-onepiece {
+            --bg-image: url('https://images.unsplash.com/photo-1518331483807-f6abc0e1f744?q=80&w=2070&auto=format&fit=crop');
+            --overlay: rgba(15, 30, 60, 0.7);
+            --card-bg: rgba(10, 15, 30, 0.85);
+            --card-border: rgba(239, 68, 68, 0.3);
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+            --accent: #ef4444; /* Red */
+        }
+
+        /* 4. Demon Slayer (Wisteria / Dark Green Vibe) */
+        .theme-demonslayer {
+            --bg-image: url('https://images.unsplash.com/photo-1528696892704-5e1122852276?q=80&w=2070&auto=format&fit=crop');
+            --overlay: rgba(10, 30, 20, 0.7);
+            --card-bg: rgba(5, 15, 10, 0.85);
+            --card-border: rgba(34, 197, 94, 0.3);
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+            --accent: #22c55e; /* Green */
+        }
+
+        /* 5. Death Note (Kira / Crimson & Black Vibe) */
+        .theme-deathnote {
+            --bg-image: url('https://images.unsplash.com/photo-1509343256512-d77a5cb3791d?q=80&w=2070&auto=format&fit=crop');
+            --overlay: rgba(0, 0, 0, 0.8);
+            --card-bg: rgba(10, 0, 0, 0.9);
+            --card-border: rgba(220, 38, 38, 0.3);
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #dc2626; /* Crimson */
+        }
+
+        /* 6. Batman (Gotham / Dark City Vibe) */
+        .theme-batman {
+            --bg-image: url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=2144&auto=format&fit=crop');
+            --overlay: rgba(10, 10, 12, 0.8);
+            --card-bg: rgba(15, 15, 18, 0.9);
+            --card-border: rgba(234, 179, 8, 0.3);
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
+            --accent: #eab308; /* Yellow/Gold */
+        }
+
+        /* 7. Superman (Metropolis / Sky Vibe) */
+        .theme-superman {
+            --bg-image: url('https://images.unsplash.com/photo-1494253109108-2e30c049369b?q=80&w=2070&auto=format&fit=crop');
+            --overlay: rgba(0, 30, 80, 0.6);
+            --card-bg: rgba(5, 20, 50, 0.85);
+            --card-border: rgba(220, 38, 38, 0.3);
+            --text-main: #ffffff;
+            --text-muted: #93c5fd;
+            --accent: #dc2626; /* Red */
+        }
+
+        /* 8. Custom Student Theme */
+        .theme-custom {
+            --overlay: rgba(0, 0, 0, 0.5);
+            --card-bg: rgba(20, 20, 20, 0.75);
+            --card-border: rgba(255, 255, 255, 0.2);
+            --text-main: #ffffff;
+            --text-muted: #d1d5db;
+            --accent: #14b8a6; /* Teal fallback */
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #000; /* Fallback */
+            background-image: var(--bg-image);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-main);
+            transition: color 0.3s ease;
+            overflow: hidden;
+        }
+
+        .bg-overlay {
+            position: absolute;
+            inset: 0;
+            background: var(--overlay);
+            backdrop-filter: blur(4px); /* Slight blur for premium cinematic look */
+            -webkit-backdrop-filter: blur(4px);
+            z-index: -1;
+            transition: background 0.5s ease;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5); /* Deep soft shadow, no neon */
+            transition: all 0.5s ease;
+        }
+
+        input {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border-color: rgba(150, 150, 150, 0.2);
+        }
+        input::placeholder { color: var(--text-muted); }
+        input:focus {
+            border-color: var(--accent);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* App Icon color changes, Logo text stays same */
+        .app-icon {
+            background-color: var(--accent);
+            color: white; /* Logo text color locked to white */
+            transition: background-color 0.5s ease;
+        }
+        
+        .form-slide-enter { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes slideUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 relative">
+    
+    <div class="bg-overlay"></div>
+
+    <!-- App Logo (Color changes, Logo remains 'V') -->
+    <div class="absolute top-6 left-6 flex items-center gap-3 z-50">
+        <div class="app-icon w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xl shadow-lg">V</div>
+        <span class="text-xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[var(--text-main)] to-[var(--text-muted)] drop-shadow-md">VERTEX</span>
+    </div>
+
+    <!-- Theme & Custom BG Controls -->
+    <div class="absolute top-6 right-6 flex items-center gap-2 z-50">
+        
+        <!-- Upload Custom Image -->
+        <label for="customBgUpload" class="cursor-pointer bg-black/40 hover:bg-black/60 backdrop-blur-md text-white px-3 py-2 rounded-lg text-xs font-bold border border-white/20 transition-all flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+            <span class="hidden md:inline">Custom BG</span>
+        </label>
+        <input type="file" id="customBgUpload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+
+        <!-- Theme Dropdown -->
+        <select id="themeSelector" onchange="setTheme(this.value)" class="bg-black/40 backdrop-blur-md text-white px-3 py-2 rounded-lg text-xs font-bold border border-white/20 outline-none cursor-pointer appearance-none">
+            <option value="light">Light (Editorial)</option>
+            <option value="dark">Dark (Cyber)</option>
+            <option value="naruto">Naruto (Will of Fire)</option>
+            <option value="onepiece">One Piece (Grand Line)</option>
+            <option value="demonslayer">Demon Slayer (Hashira)</option>
+            <option value="deathnote">Death Note (Kira/L)</option>
+            <option value="batman">Batman (Gotham)</option>
+            <option value="superman">Superman (Metropolis)</option>
+            <option value="custom" hidden>Custom Image</option>
+        </select>
+    </div>
+
+    <!-- Login Card -->
+    <div class="glass-card w-full max-w-[380px] rounded-[2rem] p-8 relative overflow-hidden form-slide-enter z-10">
+        
+        <!-- Abstract Avatar (No cheap stickers) -->
+        <div class="flex justify-center mb-8">
+            <div class="w-20 h-20 rounded-2xl p-[2px] shadow-lg transform hover:scale-105 transition-transform duration-300" style="background: var(--accent);">
+                <img id="userAvatar" src="https://images.unsplash.com/photo-1614027164847-1b28cfe1df60?q=80&w=200&auto=format&fit=crop" class="w-full h-full object-cover rounded-2xl grayscale opacity-90" alt="Profile">
+            </div>
+        </div>
+
+        <div class="text-center mb-8">
+            <h2 id="formTitle" class="text-2xl font-bold tracking-tight">Identity Access</h2>
+            <p id="formSubtitle" class="text-xs mt-1 font-medium text-[var(--text-muted)]">Authenticate to enter VERTEX.</p>
+        </div>
+
+        <form id="authForm" onsubmit="handleAuth(event)" class="space-y-4">
+            <div id="nameField" class="hidden">
+                <label class="block text-[10px] uppercase tracking-wider font-bold mb-1.5 text-[var(--text-muted)]">Legal Name</label>
+                <input type="text" id="nameInput" autocomplete="name" placeholder="Aditya Singh" class="w-full px-4 py-3.5 rounded-xl outline-none text-sm transition-all">
+            </div>
+
+            <div>
+                <label class="block text-[10px] uppercase tracking-wider font-bold mb-1.5 text-[var(--text-muted)]">Email Address</label>
+                <input type="email" id="emailInput" autocomplete="username" required placeholder="aditya@example.com" class="w-full px-4 py-3.5 rounded-xl outline-none text-sm transition-all">
+            </div>
+
+            <div>
+                <label class="block text-[10px] uppercase tracking-wider font-bold mb-1.5 text-[var(--text-muted)]">Passcode</label>
+                <input type="password" id="passwordInput" autocomplete="current-password" required placeholder="••••••••" class="w-full px-4 py-3.5 rounded-xl outline-none text-sm transition-all">
+            </div>
+
+            <button type="submit" id="submitBtn" class="w-full py-4 mt-2 rounded-xl text-white font-bold text-sm shadow-xl transition-all hover:-translate-y-0.5 active:scale-95 flex justify-center items-center" style="background-color: var(--accent);">
+                Authorize Link
+            </button>
+            
+            <p id="msgBox" class="text-xs font-bold text-center hidden mt-4 p-3 rounded-xl tracking-wide"></p>
+        </form>
+
+        <div class="text-center text-xs mt-8 font-medium text-[var(--text-muted)] border-t border-gray-500/20 pt-6">
+            <span id="toggleText">New to the network?</span> 
+            <button onclick="toggleMode()" id="toggleBtn" class="font-bold hover:opacity-80 transition-opacity ml-1 uppercase tracking-wide" style="color: var(--accent);">Initialize</button>
+        </div>
+    </div>
+
+    <script>
+        // Supabase Core
+        const supabaseUrl = 'https://memwikauqfvctwbrgmgf.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lbXdpa2F1cWZ2Y3R3YnJnbWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1Njc4NDcsImV4cCI6MjEwNTE0Mzg0N30.f1MbDY5DGxaYwVnOBrN8N0ODWe9ZpYGmiL2NfvyIBCo';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+        let isLogin = true;
+
+        // Theme Engine
+        function setTheme(theme) {
+            document.body.className = `min-h-screen flex items-center justify-center p-4 relative theme-${theme}`;
+            if(theme === 'light') document.body.className = `min-h-screen flex items-center justify-center p-4 relative`;
+            
+            document.getElementById('themeSelector').value = theme;
+            localStorage.setItem('vertex_theme', theme);
+
+            // Reset custom bg if switching to default themes
+            if(theme !== 'custom') {
+                document.body.style.backgroundImage = '';
+            } else {
+                const savedImage = localStorage.getItem('vertex_custom_bg');
+                if(savedImage) document.body.style.backgroundImage = `url(${savedImage})`;
+            }
+        }
+
+        // Custom Background Image Uploader
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const dataUrl = e.target.result;
+                    document.body.style.backgroundImage = `url(${dataUrl})`;
+                    localStorage.setItem('vertex_custom_bg', dataUrl);
+                    
+                    // Add a custom option if not present
+                    let selector = document.getElementById('themeSelector');
+                    if(selector.querySelector('option[value="custom"]').hidden) {
+                        selector.querySelector('option[value="custom"]').hidden = false;
+                    }
+                    setTheme('custom');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Load saved preferences
+        window.onload = () => {
+            const savedTheme = localStorage.getItem('vertex_theme') || 'light';
+            setTheme(savedTheme);
+        };
+
+        function toggleMode() {
+            isLogin = !isLogin;
+            const nameField = document.getElementById('nameField');
+            const submitBtn = document.getElementById('submitBtn');
+            const formTitle = document.getElementById('formTitle');
+            const formSubtitle = document.getElementById('formSubtitle');
+            const toggleText = document.getElementById('toggleText');
+            const toggleBtn = document.getElementById('toggleBtn');
+            const passInput = document.getElementById('passwordInput');
+
+            if (isLogin) {
+                nameField.classList.add('hidden');
+                document.getElementById('nameInput').removeAttribute('required');
+                submitBtn.innerText = 'Authorize Link';
+                formTitle.innerText = 'Identity Access';
+                formSubtitle.innerText = 'Authenticate to enter VERTEX.';
+                toggleText.innerText = "New to the network?";
+                toggleBtn.innerText = 'Initialize';
+                passInput.setAttribute('autocomplete', 'current-password');
+            } else {
+                nameField.classList.remove('hidden');
+                document.getElementById('nameInput').setAttribute('required', 'true');
+                submitBtn.innerText = 'Establish Profile';
+                formTitle.innerText = 'System Registry';
+                formSubtitle.innerText = 'Register credentials for access.';
+                toggleText.innerText = "Already registered?";
+                toggleBtn.innerText = 'Access';
+                passInput.setAttribute('autocomplete', 'new-password');
+            }
+        }
+
+        async function handleAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            const name = document.getElementById('nameInput').value;
+            const btn = document.getElementById('submitBtn');
+            const msgBox = document.getElementById('msgBox');
+
+            btn.innerHTML = `Loading...`;
+            msgBox.classList.add('hidden');
+
+            try {
+                if (isLogin) {
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                    if (error) throw error;
+                    showMsg('ACCESS GRANTED.', 'text-emerald-500', 'bg-emerald-500/10 border border-emerald-500/30');
+                } else {
+                    const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { data: { full_name: name } } });
+                    if (error) throw error;
+                    showMsg('PROFILE ESTABLISHED.', 'text-emerald-500', 'bg-emerald-500/10 border border-emerald-500/30');
+                    setTimeout(() => toggleMode(), 2000);
+                }
+            } catch (error) {
+                showMsg('ERROR: ' + error.message, 'text-red-500', 'bg-red-500/10 border border-red-500/30');
+            } finally {
+                if(btn.innerHTML === 'Loading...') btn.innerText = isLogin ? 'Authorize Link' : 'Establish Profile';
+            }
+        }
+
+        function showMsg(text, textColor, bgColor) {
+            const msgBox = document.getElementById('msgBox');
+            msgBox.innerText = text;
+            msgBox.className = `text-[10px] font-bold text-center mt-4 p-3 rounded-xl uppercase tracking-wider ${textColor} ${bgColor} border`;
+            msgBox.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

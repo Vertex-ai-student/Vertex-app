@@ -3,145 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VERTEX AI | The AI Operating System</title>
+    <title>VERTEX | Next Gen AI</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+    <!-- Ultra Modern Tech Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
     
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], serif: ['"Playfair Display"', 'serif'] },
-                    colors: { brand: { orange: '#d94b38', light: '#fdfbf7', dark: '#111827' } }
-                }
-            }
-        }
-    </script>
     <style>
-        body { background-color: #fdfbf7; overflow-x: hidden; scroll-behavior: smooth; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { font-family: 'Outfit', sans-serif; background-color: #030303; color: #ffffff; overflow-x: hidden; scroll-behavior: smooth; }
         
-        /* Ultra Premium Animated Background Glows */
-        .glow-orb-1 {
-            position: absolute; width: 400px; height: 400px; background: rgba(217, 75, 56, 0.15);
-            border-radius: 50%; filter: blur(80px); top: -10%; left: -10%;
-            animation: orbFloat1 10s ease-in-out infinite alternate; z-index: -1;
-        }
-        .glow-orb-2 {
-            position: absolute; width: 500px; height: 500px; background: rgba(56, 189, 248, 0.1);
-            border-radius: 50%; filter: blur(100px); bottom: -20%; right: -10%;
-            animation: orbFloat2 12s ease-in-out infinite alternate; z-index: -1;
-        }
+        /* YT Shorts Trending: Glowing Mesh Gradient Background */
+        .blob-1 { position: absolute; width: 60vw; height: 60vw; background: #7c3aed; border-radius: 50%; filter: blur(120px); opacity: 0.4; top: -10%; left: -20%; animation: float1 15s ease-in-out infinite alternate; z-index: -1; }
+        .blob-2 { position: absolute; width: 50vw; height: 50vw; background: #db2777; border-radius: 50%; filter: blur(120px); opacity: 0.3; bottom: -10%; right: -20%; animation: float2 12s ease-in-out infinite alternate; z-index: -1; }
+        .blob-3 { position: absolute; width: 40vw; height: 40vw; background: #2563eb; border-radius: 50%; filter: blur(100px); opacity: 0.3; top: 40%; left: 30%; animation: float1 10s ease-in-out infinite alternate-reverse; z-index: -1; }
         
-        @keyframes orbFloat1 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 50px) scale(1.2); } }
-        @keyframes orbFloat2 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-50px, -50px) scale(1.1); } }
+        @keyframes float1 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(100px, 50px) scale(1.2); } }
+        @keyframes float2 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-100px, -50px) scale(1.1); } }
 
-        /* Floating 3D Cards */
-        .glass-card-3d {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.08);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            transform-style: preserve-3d;
-        }
-        .glass-card-3d:hover {
-            transform: translateY(-10px) rotateX(5deg) rotateY(-5deg);
-            box-shadow: 0 30px 60px -15px rgba(217, 75, 56, 0.2);
-        }
+        /* Floating Pill Nav */
+        .glass-nav { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 100px; }
 
-        .glass-nav { background: rgba(253, 251, 247, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.6); }
+        /* Gradient Text Masks */
+        .text-gradient { background: linear-gradient(to right, #ffffff, #71717a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-neon { background: linear-gradient(to right, #a855f7, #ec4899, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: hueShift 5s linear infinite; }
+        @keyframes hueShift { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
 
-        /* Staggered Entrance */
-        .reveal-1 { animation: fadeInUp 0.8s forwards; }
-        .reveal-2 { animation: fadeInUp 0.8s 0.2s forwards; opacity: 0; }
-        .reveal-3 { animation: fadeInUp 0.8s 0.4s forwards; opacity: 0; }
-        .reveal-4 { animation: fadeInUp 0.8s 0.6s forwards; opacity: 0; }
+        /* YT Shorts Bouncy Card */
+        .yt-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 30px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .yt-card:hover { transform: translateY(-15px) scale(1.02) rotateX(5deg); border-color: rgba(255, 255, 255, 0.2); box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 40px rgba(168, 85, 247, 0.1); }
 
-        @keyframes fadeInUp {
-            0% { opacity: 0; transform: translateY(40px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
+        /* Glowing Button */
+        .btn-glow { position: relative; background: #ffffff; color: #000000; transition: all 0.3s ease; }
+        .btn-glow::before { content: ''; position: absolute; inset: -4px; border-radius: 9999px; background: linear-gradient(to right, #a855f7, #ec4899); filter: blur(12px); opacity: 0.5; z-index: -1; transition: opacity 0.3s ease; }
+        .btn-glow:hover::before { opacity: 1; filter: blur(15px); }
+        .btn-glow:hover { transform: scale(1.05); }
+
+        /* Entrance Animations */
+        .fade-up { animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        .d-1 { animation-delay: 0.1s; } .d-2 { animation-delay: 0.2s; } .d-3 { animation-delay: 0.3s; } .d-4 { animation-delay: 0.4s; }
+        @keyframes fadeUp { 0% { opacity: 0; transform: translateY(40px); } 100% { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="min-h-screen relative text-brand-dark">
+<body class="min-h-screen relative">
     
-    <!-- Animated Orbs -->
-    <div class="glow-orb-1"></div>
-    <div class="glow-orb-2"></div>
+    <!-- Deep Mesh Gradients -->
+    <div class="blob-1"></div><div class="blob-2"></div><div class="blob-3"></div>
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-40 glass-nav">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-xl md:text-2xl font-bold tracking-tight text-brand-orange">
-                VERTEX <span class="text-brand-dark">AI</span>
-            </div>
-            <!-- BUTTON LINKED TO AUTH.HTML -->
-            <button onclick="window.location.href='/auth.html'" class="bg-black text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg hover:scale-105 active:scale-95 transition-all">
-                Access Network
-            </button>
+    <!-- Glass Pill Navigation -->
+    <nav class="fixed top-4 left-4 right-4 md:left-10 md:right-10 z-50 glass-nav px-6 py-3 flex justify-between items-center fade-up">
+        <div class="text-xl font-black tracking-widest text-white">
+            VERT<span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">EX</span>
         </div>
+        <button onclick="window.location.href='/auth.html'" class="bg-white/10 hover:bg-white/20 text-white border border-white/10 px-5 py-2 rounded-full text-xs font-bold transition-all backdrop-blur-md">
+            ENTER SYSTEM
+        </button>
     </nav>
 
-    <main class="flex flex-col items-center justify-center px-4 pt-36 pb-24 z-10 w-full max-w-5xl mx-auto text-center">
+    <!-- Main Hero -->
+    <main class="flex flex-col items-center justify-center px-4 pt-40 pb-24 z-10 w-full max-w-5xl mx-auto text-center min-h-screen flex-grow">
         
-        <div class="reveal-1 inline-flex flex-wrap justify-center items-center gap-4 bg-white/50 backdrop-blur-md px-6 py-2.5 rounded-full shadow-sm border border-white text-xs font-bold text-gray-500 mb-10">
-            <span class="flex items-center gap-2 relative">
-                <span class="absolute inset-0 w-2 h-2 rounded-full bg-brand-orange animate-ping opacity-75"></span>
-                <span class="w-2 h-2 rounded-full bg-brand-orange relative z-10"></span> Learn AI
-            </span>
-            <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span> AI Skills</span>
-            <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span> Smart Learning</span>
+        <div class="fade-up d-1 px-4 py-1.5 rounded-full border border-white/10 text-[10px] uppercase tracking-widest mb-8 inline-flex items-center gap-2 bg-white/5 backdrop-blur-md font-semibold text-gray-300">
+            <span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span> SYSTEM ONLINE 2.0
         </div>
 
-        <h1 class="reveal-2 text-5xl md:text-7xl font-bold tracking-tight text-brand-dark mb-6 leading-[1.1]">
-            Where Learning Meets <br/>
-            <span class="text-brand-orange font-serif italic font-medium">Artificial Intelligence</span>
+        <h1 class="fade-up d-2 text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-6">
+            <span class="text-gradient">THE AI</span><br/>
+            <span class="text-neon">ECOSYSTEM</span>
         </h1>
 
-        <p class="reveal-3 max-w-2xl mx-auto text-gray-500 text-sm md:text-lg mb-10 px-4 font-medium">
-            VERTEX helps you move beyond theory by learning AI through hands-on projects, structured roadmaps, and mentor-driven guidance.
+        <p class="fade-up d-3 max-w-xl mx-auto text-gray-400 text-sm md:text-base font-light mb-12 tracking-wide leading-relaxed">
+            Move beyond theory. Experience the ultimate learning architecture built for the top 1% of creators and engineers.
         </p>
 
-        <!-- BUTTON LINKED TO AUTH.HTML -->
-        <button onclick="window.location.href='/auth.html'" class="reveal-4 bg-brand-orange text-white px-8 py-4 rounded-full text-sm md:text-base font-extrabold hover:bg-red-700 shadow-[0_15px_35px_rgba(217,75,56,0.3)] transition-all mb-20 hover:-translate-y-2 active:scale-95">
-            Book a Free Demo
+        <button onclick="window.location.href='/auth.html'" class="fade-up d-4 btn-glow px-10 py-4 rounded-full text-sm font-black uppercase tracking-widest mb-24">
+            Initialize Access
         </button>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full px-2">
+        <!-- Premium Abstract Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full px-4">
             
-            <div class="reveal-4 glass-card-3d rounded-3xl p-8 text-left flex flex-col justify-between">
-                <div>
-                    <h3 class="font-bold text-brand-dark text-xl mb-3">A mission to build the next generation.</h3>
-                    <p class="text-gray-500 text-sm font-medium">We aren't just teaching tools; we are shaping the minds that will build the future.</p>
-                </div>
-                <div class="text-[11px] font-bold text-brand-orange pt-6 mt-6 border-t border-gray-200">
-                    Founder L, CEO
-                </div>
-            </div>
-
-            <!-- Highly Animated Robot Core -->
-            <div class="reveal-4 glass-card-3d rounded-3xl flex items-center justify-center p-8 min-h-[250px] group relative overflow-hidden cursor-pointer" onclick="window.location.href='/auth.html'">
-                <div class="absolute inset-0 bg-gradient-to-br from-brand-orange/10 to-transparent"></div>
-                <div class="relative z-10 w-36 h-36 bg-white rounded-full shadow-2xl flex items-center justify-center border-4 border-white group-hover:scale-110 transition-transform duration-700 animate-[orbFloat1_5s_ease-in-out_infinite_alternate]">
-                    <span class="text-6xl">🤖</span>
-                </div>
-            </div>
-
-            <div class="reveal-4 glass-card-3d rounded-3xl p-8 text-left flex flex-col justify-between">
-                <div>
-                    <div class="text-brand-orange text-5xl font-serif leading-none h-8 opacity-50">"</div>
-                    <p class="text-gray-600 text-sm font-bold italic">
-                        Student Project Success Rate: This shows how well students are doing with their projects!
-                    </p>
-                </div>
-                <div class="flex items-center gap-4 mt-6 pt-6 border-t border-gray-200">
-                    <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center border-2 border-brand-orange shadow-md overflow-hidden">
-                        <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Aditya&backgroundColor=fdfbf7" alt="Avatar" class="w-full h-full object-cover">
+            <div class="fade-up d-4 yt-card p-8 text-left flex flex-col justify-between overflow-hidden relative group cursor-pointer" onclick="window.location.href='/auth.html'">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-60" alt="Abstract">
+                <div class="relative z-20">
+                    <div class="w-10 h-10 rounded-full border border-white/20 bg-black/50 backdrop-blur-md flex items-center justify-center mb-16">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     </div>
+                    <h3 class="font-bold text-white text-2xl mb-2 tracking-tight">The Neural Network</h3>
+                    <p class="text-gray-400 text-xs font-light">Advanced learning roadmaps powered by logic.</p>
+                </div>
+            </div>
+
+            <div class="fade-up d-4 yt-card p-8 text-left flex flex-col justify-between relative group">
+                <div class="relative z-20 h-full flex flex-col justify-between">
                     <div>
-                        <div class="text-sm font-extrabold text-brand-dark tracking-wide uppercase">Aditya Singh</div>
-                        <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">B.Sc CS Student</div>
+                        <div class="text-purple-500 text-6xl font-black leading-none opacity-50 absolute -top-4 -left-2">"</div>
+                        <p class="text-gray-300 text-sm font-medium mt-6 leading-relaxed relative z-10">
+                            The architecture here is flawless. It changed how I perceive UI engineering and backend systems.
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-4 mt-8 pt-6 border-t border-white/10">
+                        <div class="w-12 h-12 rounded-full p-[2px] bg-gradient-to-tr from-purple-500 to-pink-500">
+                            <img src="https://images.unsplash.com/photo-1614027164847-1b28cfe1df60?q=80&w=200&auto=format&fit=crop" class="w-full h-full rounded-full object-cover border-2 border-black" alt="Avatar">
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-white uppercase tracking-widest">Aditya Singh</div>
+                            <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">B.Sc CS Scholar</div>
+                        </div>
                     </div>
                 </div>
             </div>

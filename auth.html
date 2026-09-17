@@ -3,120 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VERTEX NEXUS | Secure Access</title>
+    <title>VERTEX | Secure Access</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+    <!-- Apple like system fonts -->
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
         :root {
-            --bg-url: url('https://images.unsplash.com/photo-1578022761797-b8636ac1773c?q=80&w=2000');
-            --card-bg: #ffffff;
+            /* Default iOS Style Theme */
+            --bg-url: url('https://images.unsplash.com/photo-1695221370216-081498b5ee42?q=80&w=2000'); /* Smooth fluid gradient */
+            --tint-color: #007AFF; /* iOS Blue */
+            --card-bg: rgba(255, 255, 255, 0.25);
+            --card-border: rgba(255, 255, 255, 0.4);
             --text-main: #000000;
-            --accent: #f97316; 
-            --border-color: #000000;
         }
 
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            background-color: #f0f0f0; background-image: var(--bg-url);
-            background-size: cover; background-position: center;
-            background-attachment: fixed; color: var(--text-main);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #000;
+            background-image: var(--bg-url);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-main);
+            overflow-x: hidden;
+            /* 120Hz Smooth background transition */
+            transition: background-image 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        .bg-overlay {
-            position: absolute; inset: 0; z-index: -1;
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(2px);
+        /* Hardware Accelerated Smooth Animations */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        .comic-card {
-            background: var(--card-bg); border: 4px solid var(--border-color);
-            border-radius: 24px; box-shadow: 12px 12px 0px var(--border-color); 
-            position: relative; transition: all 0.4s ease;
+        /* iOS Frosted Glass Effect */
+        .ios-glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid var(--card-border);
+            border-radius: 32px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
 
-        .mascot-frame {
-            position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
-            width: 120px; height: 120px; background: #fff;
-            border: 4px solid var(--border-color); border-radius: 50%;
-            box-shadow: 6px 6px 0px var(--border-color); overflow: hidden; z-index: 20;
-            animation: mascotFloat 3s ease-in-out infinite alternate;
+        /* iOS Style Inputs */
+        .ios-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 16px 20px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #000;
+            outline: none;
+            /* 120Hz optimized transition */
+            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
         }
-        @keyframes mascotFloat {
-            0% { transform: translateX(-50%) translateY(0px); }
-            100% { transform: translateX(-50%) translateY(-10px); }
+        .ios-input::placeholder { color: rgba(0, 0, 0, 0.5); }
+        .ios-input:focus {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: var(--tint-color);
+            transform: scale(1.01);
         }
 
-        .input-comic {
-            width: 100%; background: #fff; color: #000;
-            border: 3px solid var(--border-color); border-radius: 12px;
-            padding: 14px 16px; font-size: 15px; font-weight: 700; outline: none;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.1); margin-bottom: 16px;
+        /* iOS Solid Button */
+        .ios-btn {
+            background: var(--tint-color);
+            color: #fff;
+            font-weight: 600;
+            border-radius: 16px;
+            padding: 16px;
+            font-size: 16px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.1s ease, opacity 0.2s ease;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        .input-comic:focus { box-shadow: 6px 6px 0px var(--accent); transform: translate(-2px, -2px); }
-        .input-comic::placeholder { color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .ios-btn:active {
+            transform: scale(0.96); /* iOS tap shrink effect */
+            opacity: 0.8;
+        }
 
-        .btn-comic {
-            background: var(--accent); color: #fff; font-weight: 900;
-            border: 4px solid var(--border-color); border-radius: 14px;
-            box-shadow: 6px 6px 0px var(--border-color);
-            display: flex; justify-content: center; align-items: center; gap: 10px;
-            height: 60px; font-size: 16px; text-transform: uppercase; letter-spacing: 2px;
-            cursor: pointer; width: 100%;
+        /* FULL SCREEN ACTION OVERLAY */
+        #fullScreenAction {
+            position: fixed; inset: 0; z-index: 9999;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
         }
-        .btn-comic:active { transform: translate(6px, 6px); box-shadow: 0px 0px 0px var(--border-color); }
+        #fullScreenAction.active {
+            opacity: 1; pointer-events: auto;
+        }
+        .action-video-gif {
+            width: 100%; height: 100%; object-fit: cover; 
+            mix-blend-mode: screen; /* Makes black background of GIF transparent */
+            transform: scale(1.1);
+        }
+
+        /* iOS Bottom Sheet (Theme Selector) */
+        .bottom-sheet {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            border-radius: 32px 32px 0 0;
+            padding: 24px; z-index: 100;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
+        }
+        .bottom-sheet.active { transform: translateY(0); }
+        .sheet-handle { width: 40px; height: 5px; background: rgba(0,0,0,0.2); border-radius: 10px; margin: 0 auto 20px auto; }
+
+        .theme-circle {
+            width: 60px; height: 60px; border-radius: 50%; background-size: cover; background-position: center;
+            border: 2px solid transparent; transition: transform 0.2s; cursor: pointer;
+        }
+        .theme-circle:active { transform: scale(0.9); }
+        .theme-circle.active-theme { border: 3px solid var(--tint-color); padding: 2px; }
         
-        .action-gif { height: 35px; width: auto; object-fit: contain; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4 relative">
+<body class="min-h-screen flex flex-col items-center justify-center p-5 relative">
     
-    <div class="bg-overlay"></div>
+    <!-- Top Branding (Clean) -->
+    <div class="absolute top-8 left-8 z-40">
+        <span class="text-2xl font-bold tracking-tight text-white drop-shadow-md">VERTEX</span>
+    </div>
 
-    <div class="comic-card w-full max-w-[380px] p-8 relative z-10 mt-12 pt-16">
+    <!-- Theme Selection Button (iOS Pill) -->
+    <button onclick="toggleThemeSheet()" class="absolute top-8 right-8 z-40 bg-white/30 backdrop-blur-md border border-white/40 px-4 py-2 rounded-full text-xs font-semibold text-black shadow-sm flex items-center gap-2 hover:bg-white/40 transition-colors">
+        <div class="w-3 h-3 rounded-full" style="background: var(--tint-color);"></div> Personalize
+    </button>
+
+    <!-- MAIN IOS AUTH CARD -->
+    <div class="ios-glass w-full max-w-[360px] p-8 relative z-10">
         
-        <div class="mascot-frame">
-            <img id="mascotImage" src="https://media.tenor.com/5O29qG3fC4AAAAAi/naruto-chibi.gif" class="w-full h-full object-cover bg-white" alt="Mascot">
-        </div>
-
         <div class="text-center mb-8">
-            <div class="text-[11px] font-black uppercase tracking-widest px-3 py-1 border-2 border-black inline-block rounded-full mb-2 shadow-[2px_2px_0px_#000]" style="background: var(--accent); color: white;" id="cardThemeCat">SYSTEM</div>
-            <h2 id="formTitle" class="text-3xl font-black tracking-tighter" style="color: var(--border-color);">LOGIN</h2>
+            <h2 id="formTitle" class="text-3xl font-bold tracking-tight text-gray-900">Sign In</h2>
+            <p id="formSubtitle" class="text-sm font-medium text-gray-600 mt-1">To access your learning dashboard</p>
         </div>
 
-        <form id="authForm" onsubmit="handleAuth(event)">
+        <form id="authForm" onsubmit="handleAuth(event)" class="space-y-4">
             
-            <input type="text" id="nameInput" class="input-comic hidden" placeholder="Full Name" autocomplete="name">
-            <input type="email" id="emailInput" class="input-comic" placeholder="Email Address" required autocomplete="email">
-            <input type="password" id="passwordInput" class="input-comic" placeholder="Password" required autocomplete="current-password">
+            <input type="text" id="nameInput" class="ios-input hidden" placeholder="Full Name" autocomplete="name">
+            <input type="email" id="emailInput" class="ios-input" placeholder="Email" required autocomplete="email">
+            <input type="password" id="passwordInput" class="ios-input" placeholder="Password" required autocomplete="current-password">
 
-            <button type="submit" id="submitBtn" class="btn-comic mt-2">
-                <span id="btnText">ENTER SYSTEM</span>
+            <button type="submit" id="submitBtn" class="ios-btn mt-6">
+                <span id="btnText">Continue</span>
             </button>
             
-            <p id="msgBox" class="text-[11px] font-black text-center hidden mt-5 p-3 rounded-xl uppercase border-4 border-black shadow-[4px_4px_0px_#000]"></p>
+            <p id="msgBox" class="text-xs font-medium text-center hidden mt-4 p-3 rounded-xl bg-red-100 text-red-600 border border-red-200"></p>
         </form>
 
-        <div class="text-center text-xs mt-8 font-bold text-gray-600 uppercase border-t-4 border-black pt-5">
+        <div class="text-center text-sm mt-8 font-medium text-gray-600">
             <span id="toggleText">Don't have an account?</span> 
-            <button onclick="toggleMode()" id="toggleBtn" class="text-black hover:underline ml-1" style="color: var(--accent);">Sign Up</button>
+            <button onclick="toggleMode()" id="toggleBtn" class="font-bold transition-colors" style="color: var(--tint-color);">Sign up</button>
         </div>
     </div>
 
+    <!-- FULL SCREEN ACTION OVERLAY (The Magic) -->
+    <div id="fullScreenAction">
+        <!-- GIF will be injected here dynamically -->
+        <img id="actionGifEl" class="action-video-gif" src="" alt="Action">
+    </div>
+
+    <!-- IOS STYLE THEME SELECTOR (Bottom Sheet) -->
+    <div id="themeSheet" class="bottom-sheet">
+        <div class="sheet-handle" onclick="toggleThemeSheet()"></div>
+        <h3 class="text-lg font-bold text-center mb-6 text-black">Choose Atmosphere</h3>
+        
+        <div class="flex justify-center gap-4 overflow-x-auto pb-4">
+            <!-- Themes -->
+            <div class="flex flex-col items-center gap-2">
+                <div class="theme-circle active-theme" style="background-image: url('https://images.unsplash.com/photo-1695221370216-081498b5ee42?q=80&w=400');" onclick="applyTheme('ios_default')"></div>
+                <span class="text-[10px] font-semibold text-gray-500">Default</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="theme-circle" style="background-image: url('https://images.unsplash.com/photo-1604200213928-ba3cf4fc8436?q=80&w=400');" onclick="applyTheme('spiderman')"></div>
+                <span class="text-[10px] font-semibold text-gray-500">Spidey</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="theme-circle" style="background-image: url('https://images.alphacoders.com/202/202868.jpg');" onclick="applyTheme('naruto')"></div>
+                <span class="text-[10px] font-semibold text-gray-500">Naruto</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="theme-circle" style="background-image: url('https://images.alphacoders.com/123/1230114.jpg');" onclick="applyTheme('batman')"></div>
+                <span class="text-[10px] font-semibold text-gray-500">Batman</span>
+            </div>
+        </div>
+        
+        <button onclick="toggleThemeSheet()" class="w-full mt-4 bg-gray-100 text-black font-semibold py-3 rounded-xl hover:bg-gray-200 transition-colors">Done</button>
+    </div>
+
     <script>
+        // Supabase Initialization
         const supabaseUrl = 'https://memwikauqfvctwbrgmgf.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lbXdpa2F1cWZ2Y3R3YnJnbWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1Njc4NDcsImV4cCI6MjEwNTE0Mzg0N30.f1MbDY5DGxaYwVnOBrN8N0ODWe9ZpYGmiL2NfvyIBCo';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        const currentGif = 'https://media.tenor.com/71233F62mXMAAAAi/naruto-rasengan.gif';
+        /* ========================================================
+           THEME & FULL SCREEN ACTION ENGINE
+        ======================================================== */
+        const themes = {
+            'ios_default': {
+                bg: 'https://images.unsplash.com/photo-1695221370216-081498b5ee42?q=80&w=2000', // Apple Fluid Background
+                tint: '#007AFF', // iOS Blue
+                glassBg: 'rgba(255, 255, 255, 0.25)', text: '#000000',
+                // Smooth tech loading grid
+                actionGif: 'https://media.tenor.com/On7kvXhzmL4AAAAi/loading-gif.gif' 
+            },
+            'spiderman': {
+                bg: 'https://images.unsplash.com/photo-1604200213928-ba3cf4fc8436?q=80&w=2000', // Spider/Red Abstract
+                tint: '#dc2626', // Spidey Red
+                glassBg: 'rgba(255, 255, 255, 0.8)', text: '#000000',
+                // Full Screen Web Shoot GIF!
+                actionGif: 'https://media.tenor.com/bK1zE3e6zF0AAAAi/spiderman-web.gif' 
+            },
+            'naruto': {
+                bg: 'https://images2.alphacoders.com/131/1314488.jpeg', // Anime BG
+                tint: '#f97316', // Orange
+                glassBg: 'rgba(255, 255, 255, 0.85)', text: '#000000',
+                // Full Screen Rasengan Impact!
+                actionGif: 'https://media.tenor.com/71233F62mXMAAAAi/naruto-rasengan.gif' 
+            },
+            'batman': {
+                bg: 'https://images.alphacoders.com/123/1230114.jpg', // Dark City
+                tint: '#eab308', // Yellow
+                glassBg: 'rgba(10, 10, 10, 0.5)', text: '#ffffff', // Dark glass for batman
+                // Full Screen Bat Swarm / Signal
+                actionGif: 'https://media.tenor.com/PZt7H55-P5gAAAAi/batman-bat-signal.gif' 
+            }
+        };
+
+        let currentTheme = 'ios_default';
         let isLogin = true;
 
+        // Initialize Engine
+        window.onload = () => {
+            const savedTheme = localStorage.getItem('vertex_theme') || 'ios_default';
+            applyTheme(savedTheme);
+        };
+
+        function applyTheme(id) {
+            if(!themes[id]) return;
+            currentTheme = id;
+            const data = themes[id];
+            const root = document.documentElement;
+            
+            // Smoothly change variables (CSS handles the transition)
+            root.style.setProperty('--bg-url', `url('${data.bg}')`);
+            root.style.setProperty('--tint-color', data.tint);
+            root.style.setProperty('--card-bg', data.glassBg);
+            root.style.setProperty('--text-main', data.text);
+
+            // Update UI Selection state
+            document.querySelectorAll('.theme-circle').forEach(el => el.classList.remove('active-theme'));
+            event.target.classList.add('active-theme');
+
+            localStorage.setItem('vertex_theme', id);
+        }
+
+        function toggleThemeSheet() {
+            document.getElementById('themeSheet').classList.toggle('active');
+        }
+
+        // Toggle Login / Signup smoothly
         function toggleMode() {
             isLogin = !isLogin;
             const nameInput = document.getElementById('nameInput');
             const submitBtn = document.getElementById('submitBtn');
             const formTitle = document.getElementById('formTitle');
+            const subtitle = document.getElementById('formSubtitle');
             const toggleText = document.getElementById('toggleText');
             const toggleBtn = document.getElementById('toggleBtn');
             
@@ -124,60 +290,64 @@
 
             if (isLogin) {
                 nameInput.classList.add('hidden'); nameInput.removeAttribute('required');
-                submitBtn.innerHTML = '<span id="btnText">ENTER SYSTEM</span>';
-                formTitle.innerText = "LOGIN";
-                toggleText.innerText = "Don't have an account?"; toggleBtn.innerText = 'Sign Up';
+                submitBtn.innerHTML = '<span id="btnText">Continue</span>';
+                formTitle.innerText = "Sign In"; subtitle.innerText = "To access your learning dashboard";
+                toggleText.innerText = "Don't have an account?"; toggleBtn.innerText = 'Sign up';
             } else {
                 nameInput.classList.remove('hidden'); nameInput.setAttribute('required', 'true');
-                submitBtn.innerHTML = '<span id="btnText">CREATE ACCOUNT</span>';
-                formTitle.innerText = "SIGN UP";
-                toggleText.innerText = "Already an agent?"; toggleBtn.innerText = 'Login';
+                submitBtn.innerHTML = '<span id="btnText">Create Account</span>';
+                formTitle.innerText = "Create ID"; subtitle.innerText = "Join the future of learning";
+                toggleText.innerText = "Already an agent?"; toggleBtn.innerText = 'Sign in';
             }
         }
 
+        /* ========================================================
+           THE FULL-SCREEN ACTION MAGIC + SUPABASE AUTH
+        ======================================================== */
         async function handleAuth(e) {
             e.preventDefault();
             const email = document.getElementById('emailInput').value;
             const password = document.getElementById('passwordInput').value;
             const name = document.getElementById('nameInput').value;
-            const btn = document.getElementById('submitBtn');
-            
-            btn.innerHTML = `<img src="${currentGif}" class="action-gif" alt="Action"> <span>PROCESSING...</span>`;
+            const msgBox = document.getElementById('msgBox');
+            msgBox.classList.add('hidden');
 
-            try {
-                if (isLogin) {
-                    // LOGIN PROCESS (Existing User with Password)
-                    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-                    if (error) throw error;
+            // 1. SHOW FULL SCREEN ANIMATION (Spider-Man Web, etc.)
+            const fullScreenEl = document.getElementById('fullScreenAction');
+            const gifEl = document.getElementById('actionGifEl');
+            
+            gifEl.src = themes[currentTheme].actionGif;
+            fullScreenEl.classList.add('active'); // Fades in smoothly
+
+            // 2. We add a small delay (1.5 seconds) so user ENJOYS the full-screen animation before DB processing
+            setTimeout(async () => {
+                try {
+                    if (isLogin) {
+                        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                        if (error) throw error;
+                    } else {
+                        // Confirm Email is OFF in Supabase, so this instantly logs in
+                        const { error } = await supabaseClient.auth.signUp({ 
+                            email, password, options: { data: { full_name: name } }
+                        });
+                        if (error) throw error;
+                    }
                     
-                    showMsg('ACCESS GRANTED! REDIRECTING...', 'text-green-600', 'bg-green-100');
-                    setTimeout(() => { window.location.href = '/dashboard.html'; }, 1000);
-                } 
-                else {
-                    // SIGNUP PROCESS (New User)
-                    const { error } = await supabaseClient.auth.signUp({ 
-                        email, password, options: { data: { full_name: name } }
-                    });
-                    if (error) throw error;
+                    // Success: Transfer to Dashboard!
+                    window.location.href = '/dashboard.html';
                     
-                    // Tells user to click the link in their email
-                    showMsg('✅ ACCOUNT CREATED! Please check your email inbox and click the verification link to login.', 'text-blue-700', 'bg-blue-100');
-                    
-                    // Switch back to login mode automatically after 5 seconds
-                    setTimeout(() => {
-                        if(!isLogin) toggleMode();
-                    }, 5000);
+                } catch (error) {
+                    // If error (wrong pass), hide animation and show error smoothly
+                    fullScreenEl.classList.remove('active');
+                    showMsg(error.message);
                 }
-            } catch (error) {
-                showMsg(error.message, 'text-red-600', 'bg-red-100');
-                btn.innerHTML = isLogin ? '<span>ENTER SYSTEM</span>' : '<span>CREATE ACCOUNT</span>';
-            }
+            }, 1500); // 1.5 second animation show-time
         }
 
-        function showMsg(text, textColor, bgColor) {
+        function showMsg(text) {
             const msgBox = document.getElementById('msgBox');
-            msgBox.className = `text-[11px] font-black text-center mt-5 p-3 rounded-xl uppercase border-4 border-[var(--border-color)] shadow-[4px_4px_0px_var(--border-color)] ${textColor} ${bgColor}`;
-            msgBox.innerText = text; msgBox.classList.remove('hidden');
+            msgBox.innerText = text; 
+            msgBox.classList.remove('hidden');
         }
     </script>
 </body>

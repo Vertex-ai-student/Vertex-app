@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VERTEX NEXUS | Hybrid Auth</title>
+    <title>VERTEX NEXUS | Secure Access</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -23,7 +23,6 @@
             background-color: #f0f0f0; background-image: var(--bg-url);
             background-size: cover; background-position: center;
             background-attachment: fixed; color: var(--text-main);
-            overflow-x: hidden; transition: background-image 0.4s ease;
         }
 
         .bg-overlay {
@@ -53,7 +52,7 @@
             width: 100%; background: #fff; color: #000;
             border: 3px solid var(--border-color); border-radius: 12px;
             padding: 14px 16px; font-size: 15px; font-weight: 700; outline: none;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.1); margin-bottom: 16px; transition: all 0.2s ease;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.1); margin-bottom: 16px;
         }
         .input-comic:focus { box-shadow: 6px 6px 0px var(--accent); transform: translate(-2px, -2px); }
         .input-comic::placeholder { color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
@@ -64,23 +63,18 @@
             box-shadow: 6px 6px 0px var(--border-color);
             display: flex; justify-content: center; align-items: center; gap: 10px;
             height: 60px; font-size: 16px; text-transform: uppercase; letter-spacing: 2px;
-            transition: all 0.1s ease; cursor: pointer; width: 100%;
+            cursor: pointer; width: 100%;
         }
         .btn-comic:active { transform: translate(6px, 6px); box-shadow: 0px 0px 0px var(--border-color); }
-
+        
         .action-gif { height: 35px; width: auto; object-fit: contain; }
-        .otp-letter-spacing { letter-spacing: 8px; text-align: center; font-size: 24px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4 relative">
     
     <div class="bg-overlay"></div>
 
-    <div class="absolute top-6 left-6 z-40 cursor-pointer" onclick="window.location.href='/index.html'">
-        <span class="text-3xl font-black tracking-widest text-white drop-shadow-[4px_4px_0px_#000]" style="text-shadow: 3px 3px 0px var(--accent), 4px 4px 0px #000;">VERTEX</span>
-    </div>
-
-    <div class="comic-card w-full max-w-[380px] p-8 relative z-10 mt-16 pt-16">
+    <div class="comic-card w-full max-w-[380px] p-8 relative z-10 mt-12 pt-16">
         
         <div class="mascot-frame">
             <img id="mascotImage" src="https://media.tenor.com/5O29qG3fC4AAAAAi/naruto-chibi.gif" class="w-full h-full object-cover bg-white" alt="Mascot">
@@ -91,24 +85,20 @@
             <h2 id="formTitle" class="text-3xl font-black tracking-tighter" style="color: var(--border-color);">LOGIN</h2>
         </div>
 
-        <!-- HYBRID FORM -->
         <form id="authForm" onsubmit="handleAuth(event)">
             
             <input type="text" id="nameInput" class="input-comic hidden" placeholder="Full Name" autocomplete="name">
             <input type="email" id="emailInput" class="input-comic" placeholder="Email Address" required autocomplete="email">
             <input type="password" id="passwordInput" class="input-comic" placeholder="Password" required autocomplete="current-password">
-            
-            <!-- OTP Input (Hidden initially, opens only during signup) -->
-            <input type="text" id="otpInput" class="input-comic hidden otp-letter-spacing" placeholder="000000" maxlength="6" pattern="[0-9]*" inputmode="numeric">
 
             <button type="submit" id="submitBtn" class="btn-comic mt-2">
                 <span id="btnText">ENTER SYSTEM</span>
             </button>
             
-            <p id="msgBox" class="text-xs font-black text-center hidden mt-5 p-3 rounded-xl uppercase border-4 border-black shadow-[4px_4px_0px_#000]"></p>
+            <p id="msgBox" class="text-[11px] font-black text-center hidden mt-5 p-3 rounded-xl uppercase border-4 border-black shadow-[4px_4px_0px_#000]"></p>
         </form>
 
-        <div id="toggleContainer" class="text-center text-xs mt-8 font-bold text-gray-600 uppercase border-t-4 border-black pt-5">
+        <div class="text-center text-xs mt-8 font-bold text-gray-600 uppercase border-t-4 border-black pt-5">
             <span id="toggleText">Don't have an account?</span> 
             <button onclick="toggleMode()" id="toggleBtn" class="text-black hover:underline ml-1" style="color: var(--accent);">Sign Up</button>
         </div>
@@ -119,45 +109,29 @@
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lbXdpa2F1cWZ2Y3R3YnJnbWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1Njc4NDcsImV4cCI6MjEwNTE0Mzg0N30.f1MbDY5DGxaYwVnOBrN8N0ODWe9ZpYGmiL2NfvyIBCo';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        const savedTheme = localStorage.getItem('vertex_theme') || 'naruto';
-        const actionGifs = {
-            'naruto': 'https://media.tenor.com/71233F62mXMAAAAi/naruto-rasengan.gif',
-            'deathnote': 'https://media.tenor.com/QeYg9t5s-FwAAAAi/death-note-writing.gif',
-            'batman': 'https://media.tenor.com/PZt7H55-P5gAAAAi/batman-bat-signal.gif',
-            'default': 'https://media.tenor.com/On7kvXhzmL4AAAAi/loading-gif.gif'
-        };
-        const currentGif = actionGifs[savedTheme] || actionGifs['default'];
-
-        // Core App Logic States
+        const currentGif = 'https://media.tenor.com/71233F62mXMAAAAi/naruto-rasengan.gif';
         let isLogin = true;
-        let isAwaitingOtp = false; // Only used for Signup OTP Verification
 
         function toggleMode() {
-            if(isAwaitingOtp) return; // Prevent toggle during OTP phase
-            
             isLogin = !isLogin;
             const nameInput = document.getElementById('nameInput');
             const submitBtn = document.getElementById('submitBtn');
             const formTitle = document.getElementById('formTitle');
             const toggleText = document.getElementById('toggleText');
             const toggleBtn = document.getElementById('toggleBtn');
-            const passInput = document.getElementById('passwordInput');
-            const msgBox = document.getElementById('msgBox');
-
-            msgBox.classList.add('hidden');
+            
+            document.getElementById('msgBox').classList.add('hidden');
 
             if (isLogin) {
                 nameInput.classList.add('hidden'); nameInput.removeAttribute('required');
                 submitBtn.innerHTML = '<span id="btnText">ENTER SYSTEM</span>';
                 formTitle.innerText = "LOGIN";
                 toggleText.innerText = "Don't have an account?"; toggleBtn.innerText = 'Sign Up';
-                passInput.setAttribute('autocomplete', 'current-password');
             } else {
                 nameInput.classList.remove('hidden'); nameInput.setAttribute('required', 'true');
                 submitBtn.innerHTML = '<span id="btnText">CREATE ACCOUNT</span>';
                 formTitle.innerText = "SIGN UP";
                 toggleText.innerText = "Already an agent?"; toggleBtn.innerText = 'Login';
-                passInput.setAttribute('autocomplete', 'new-password');
             }
         }
 
@@ -167,78 +141,42 @@
             const password = document.getElementById('passwordInput').value;
             const name = document.getElementById('nameInput').value;
             const btn = document.getElementById('submitBtn');
-            const msgBox = document.getElementById('msgBox');
             
-            // Play Animation
             btn.innerHTML = `<img src="${currentGif}" class="action-gif" alt="Action"> <span>PROCESSING...</span>`;
-            msgBox.classList.add('hidden');
 
             try {
-                // ================== LOGIN LOGIC ==================
                 if (isLogin) {
-                    const { error } = await supabaseClient.auth.signInWithPassword({ 
-                        email: email, 
-                        password: password 
-                    });
-                    
+                    // LOGIN PROCESS (Existing User with Password)
+                    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
                     if (error) throw error;
+                    
                     showMsg('ACCESS GRANTED! REDIRECTING...', 'text-green-600', 'bg-green-100');
                     setTimeout(() => { window.location.href = '/dashboard.html'; }, 1000);
                 } 
-                // ================== SIGNUP LOGIC (STEP 1 & 2) ==================
                 else {
-                    // STEP 1: Create Account & Send OTP
-                    if(!isAwaitingOtp) {
-                        const { error } = await supabaseClient.auth.signUp({ 
-                            email: email, 
-                            password: password,
-                            options: { data: { full_name: name } }
-                        });
-                        
-                        if (error) throw error;
-                        
-                        // Switch UI to OTP Mode
-                        isAwaitingOtp = true;
-                        document.getElementById('nameInput').classList.add('hidden');
-                        document.getElementById('emailInput').classList.add('hidden');
-                        document.getElementById('passwordInput').classList.add('hidden');
-                        document.getElementById('toggleContainer').classList.add('hidden');
-                        
-                        document.getElementById('otpInput').classList.remove('hidden');
-                        document.getElementById('otpInput').setAttribute('required', 'true');
-                        document.getElementById('formTitle').innerText = "VERIFY EMAIL";
-                        
-                        showMsg('OTP SENT TO YOUR INBOX!', 'text-green-600', 'bg-green-100');
-                        btn.innerHTML = `<span>VERIFY OTP</span>`;
-                    } 
-                    // STEP 2: Verify OTP
-                    else {
-                        const otp = document.getElementById('otpInput').value;
-                        const { error } = await supabaseClient.auth.verifyOtp({ 
-                            email: email, 
-                            token: otp, 
-                            type: 'signup' // Crucial: Specifies we are verifying a new account
-                        });
-                        
-                        if (error) throw error;
-                        
-                        showMsg('ACCOUNT VERIFIED! REDIRECTING...', 'text-green-600', 'bg-green-100');
-                        setTimeout(() => { window.location.href = '/dashboard.html'; }, 1000);
-                    }
+                    // SIGNUP PROCESS (New User)
+                    const { error } = await supabaseClient.auth.signUp({ 
+                        email, password, options: { data: { full_name: name } }
+                    });
+                    if (error) throw error;
+                    
+                    // Tells user to click the link in their email
+                    showMsg('✅ ACCOUNT CREATED! Please check your email inbox and click the verification link to login.', 'text-blue-700', 'bg-blue-100');
+                    
+                    // Switch back to login mode automatically after 5 seconds
+                    setTimeout(() => {
+                        if(!isLogin) toggleMode();
+                    }, 5000);
                 }
             } catch (error) {
                 showMsg(error.message, 'text-red-600', 'bg-red-100');
-                if(!isAwaitingOtp) {
-                    btn.innerHTML = isLogin ? '<span>ENTER SYSTEM</span>' : '<span>CREATE ACCOUNT</span>';
-                } else {
-                    btn.innerHTML = `<span>VERIFY OTP</span>`;
-                }
+                btn.innerHTML = isLogin ? '<span>ENTER SYSTEM</span>' : '<span>CREATE ACCOUNT</span>';
             }
         }
 
         function showMsg(text, textColor, bgColor) {
             const msgBox = document.getElementById('msgBox');
-            msgBox.className = `text-xs font-black text-center mt-5 p-3 rounded-xl uppercase border-4 border-[var(--border-color)] shadow-[4px_4px_0px_var(--border-color)] ${textColor} ${bgColor}`;
+            msgBox.className = `text-[11px] font-black text-center mt-5 p-3 rounded-xl uppercase border-4 border-[var(--border-color)] shadow-[4px_4px_0px_var(--border-color)] ${textColor} ${bgColor}`;
             msgBox.innerText = text; msgBox.classList.remove('hidden');
         }
     </script>

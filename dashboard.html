@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VERTEX | Student Dashboard</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fdfbf7; /* Clean Editorial Background */
+            color: #111827;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+            border-radius: 20px;
+        }
+        .sidebar-active {
+            background-color: #f3f4f6;
+            color: #d94b38; /* Coral Accent */
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- PAGE LOADER (Dikhne tak jab tak security check na ho jaye) -->
+    <div id="loader" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+    </div>
+
+    <!-- SIDEBAR (Desktop) -->
+    <aside class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col justify-between p-6">
+        <div>
+            <div class="text-2xl font-black tracking-widest text-[#d94b38] mb-10">
+                VERTEX <span class="text-gray-900">AI</span>
+            </div>
+            <nav class="space-y-2">
+                <a href="#" class="block px-4 py-3 rounded-xl sidebar-active">Dashboard</a>
+                <a href="#" class="block px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-50 font-medium transition-colors">Learning MRI</a>
+                <a href="#" class="block px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-50 font-medium transition-colors">AI Notes Factory</a>
+                <a href="#" class="block px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-50 font-medium transition-colors">Auto Scheduler</a>
+            </nav>
+        </div>
+        <button onclick="logout()" class="px-4 py-3 text-left text-gray-500 hover:text-red-600 font-bold transition-colors w-full rounded-xl hover:bg-red-50">
+            Sign Out
+        </button>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex flex-col h-full overflow-y-auto">
+        
+        <!-- MOBILE HEADER -->
+        <header class="md:hidden bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-black tracking-widest text-[#d94b38]">
+                VERTEX <span class="text-gray-900">AI</span>
+            </div>
+            <button onclick="logout()" class="text-xs font-bold text-gray-500">Sign Out</button>
+        </header>
+
+        <div class="p-6 md:p-10 max-w-6xl mx-auto w-full">
+            
+            <!-- WELCOME SECTION -->
+            <div class="mb-10">
+                <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
+                    Welcome back, <span id="userName" class="text-[#d94b38]">Student</span>
+                </h1>
+                <p class="text-gray-500 mt-2 font-medium">Here is your daily AI learning overview.</p>
+            </div>
+
+            <!-- LEARNING MRI (Stats) -->
+            <h2 class="text-lg font-bold mb-4">Learning MRI</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                <div class="glass-panel p-5">
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Modules Done</p>
+                    <p class="text-3xl font-black text-gray-900">12</p>
+                </div>
+                <div class="glass-panel p-5">
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Focus Score</p>
+                    <p class="text-3xl font-black text-green-600">85%</p>
+                </div>
+                <div class="glass-panel p-5">
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Current Streak</p>
+                    <p class="text-3xl font-black text-orange-500">4 Days</p>
+                </div>
+                <div class="glass-panel p-5">
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">AI Insights</p>
+                    <p class="text-sm font-bold text-[#d94b38]">Action Required</p>
+                </div>
+            </div>
+
+            <!-- CORE MODULES -->
+            <h2 class="text-lg font-bold mb-4">Core Modules</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- AI Notes Factory Card -->
+                <div class="glass-panel p-6 flex flex-col justify-between hover:-translate-y-1 transition-transform cursor-pointer border border-gray-100">
+                    <div>
+                        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl mb-4">📝</div>
+                        <h3 class="text-xl font-bold mb-2">AI Notes Factory</h3>
+                        <p class="text-sm text-gray-500 font-medium">Turn any YouTube video, PDF, or audio into structured revision notes instantly.</p>
+                    </div>
+                    <button class="mt-6 w-full bg-gray-900 text-white font-bold py-3 rounded-xl hover:bg-gray-800 transition-colors">
+                        Launch Factory
+                    </button>
+                </div>
+
+                <!-- Auto Scheduler Card -->
+                <div class="glass-panel p-6 flex flex-col justify-between hover:-translate-y-1 transition-transform cursor-pointer border border-gray-100">
+                    <div>
+                        <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-2xl mb-4">🗓️</div>
+                        <h3 class="text-xl font-bold mb-2">Auto Scheduler</h3>
+                        <p class="text-sm text-gray-500 font-medium">AI plans your week based on your syllabus, free time, and learning speed.</p>
+                    </div>
+                    <button class="mt-6 w-full bg-gray-900 text-white font-bold py-3 rounded-xl hover:bg-gray-800 transition-colors">
+                        View Schedule
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- SUPABASE SECURITY ENGINE -->
+    <script>
+        const supabaseUrl = 'https://memwikauqfvctwbrgmgf.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lbXdpa2F1cWZ2Y3R3YnJnbWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1Njc4NDcsImV4cCI6MjEwNTE0Mzg0N30.f1MbDY5DGxaYwVnOBrN8N0ODWe9ZpYGmiL2NfvyIBCo';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Security Check: Dekho ki user logged in hai ya nahi
+        async function checkSession() {
+            const { data, error } = await supabaseClient.auth.getSession();
+            
+            if (error || !data.session) {
+                // Agar login nahi hai, seedha bahar fek do auth.html par
+                window.location.href = '/auth.html';
+            } else {
+                // Agar login hai, loader hatao aur dashboard dikhao
+                document.getElementById('loader').style.display = 'none';
+                
+                // User ka naam ya email nikalkar screen par dikhao
+                const user = data.session.user;
+                const name = user.user_metadata?.full_name || user.email.split('@')[0];
+                document.getElementById('userName').innerText = name;
+            }
+        }
+
+        // Logout Function
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            window.location.href = '/auth.html';
+        }
+
+        // Page load hote hi security check karo
+        window.onload = checkSession;
+    </script>
+</body>
+</html>

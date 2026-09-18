@@ -3,165 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>VERTEX | App Interface</title>
+    <title>VERTEX | App Dashboard</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Supabase Core -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         :root {
             --bg-image: url('https://images.unsplash.com/photo-1695221370216-081498b5ee42?q=80&w=2000');
             --btn-color: #007AFF;
-            --glass-bg: rgba(10, 10, 10, 0.4);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-color: #ffffff;
-            --nav-bg: rgba(0, 0, 0, 0.65);
+            --nav-bg: rgba(20, 20, 20, 0.85);
         }
 
-        /* 120Hz App Base */
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: #000;
-            color: var(--text-color);
-            margin: 0; padding: 0;
-            height: 100dvh; /* Mobile viewport fix */
-            overflow: hidden;
-            display: flex; flex-direction: column;
-            -webkit-font-smoothing: antialiased;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #000; color: #fff;
+            margin: 0; padding: 0; height: 100dvh; overflow: hidden;
+            display: flex; flex-direction: column; -webkit-font-smoothing: antialiased;
         }
 
-        /* Dynamic Background Engine */
+        /* Dynamic Engine */
         #app-background {
             position: fixed; inset: 0; z-index: -2;
-            background-image: var(--bg-image);
-            background-size: cover; background-position: center;
-            transition: background-image 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            background-image: var(--bg-image); background-size: cover; background-position: center;
+            transition: background-image 0.8s ease;
         }
-        
-        /* Dark Gradient Overlay for readability */
         .bg-overlay {
             position: fixed; inset: 0; z-index: -1;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.95) 100%);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
         }
 
-        /* Pro Glass Panels */
-        .glass-panel {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
+        /* Bento Grid Glass Panels */
+        .bento-card {
+            background: rgba(30, 30, 30, 0.5); border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease;
         }
 
-        /* --------------------------------------
-           FLOATING BOTTOM NAVIGATION BAR (iOS Style)
-           -------------------------------------- */
+        /* Floating iOS Nav Bar */
         .bottom-nav-container {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px; z-index: 100;
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 380px; z-index: 100;
         }
         .bottom-nav {
-            background: var(--nav-bg);
-            backdrop-filter: blur(30px) saturate(200%); -webkit-backdrop-filter: blur(30px) saturate(200%);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 100px;
+            background: var(--nav-bg); backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
+            border: 1px solid rgba(255,255,255,0.15); border-radius: 100px;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 8px 12px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            padding: 10px 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
         .nav-btn {
-            position: relative;
-            width: 50px; height: 50px;
+            position: relative; width: 45px; height: 45px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: rgba(255,255,255,0.5);
-            border-radius: 50%; cursor: pointer;
+            color: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        /* Active State Indicator */
         .nav-btn.active {
-            color: var(--text-color);
-            background: rgba(255,255,255,0.1);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            color: #fff; background: rgba(255,255,255,0.1);
+            transform: translateY(-4px);
         }
-        .nav-btn i { font-size: 20px; z-index: 2; transition: transform 0.3s ease; }
-        .nav-btn.active i { color: var(--btn-color); transform: scale(1.1); filter: drop-shadow(0 0 10px var(--btn-color)); }
+        .nav-btn i { font-size: 20px; transition: transform 0.3s ease; }
+        .nav-btn.active i { color: var(--btn-color); transform: scale(1.1); filter: drop-shadow(0 0 8px var(--btn-color)); }
         
-        /* Smooth Page Transitions */
         .page-fade-enter { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Custom Scrollbar */
         .scroll-area { overflow-y: auto; overflow-x: hidden; padding-bottom: 120px; }
-        .scroll-area::-webkit-scrollbar { display: none; } /* Hidden for native app feel */
+        .scroll-area::-webkit-scrollbar { display: none; } 
     </style>
 </head>
 <body>
 
-    <!-- Background Layer -->
     <div id="app-background"></div>
     <div class="bg-overlay"></div>
 
-    <!-- MAIN APP CONTAINER -->
-    <div class="flex flex-col h-full w-full max-w-2xl mx-auto relative z-10">
+    <div class="flex flex-col h-full w-full max-w-lg mx-auto relative z-10">
         
-        <!-- HEADER: TOP LEFT PORTFOLIO -->
-        <header class="px-6 pt-12 pb-4 flex justify-between items-center">
-            <div class="flex items-center gap-3">
+        <!-- Apple Style Top Header -->
+        <header class="px-6 pt-14 pb-4 flex justify-between items-center">
+            <div class="flex items-center gap-4">
                 <div class="relative">
-                    <img id="userAvatar" src="https://api.dicebear.com/7.x/notionists/svg?seed=User&backgroundColor=transparent" class="w-12 h-12 rounded-full border-2 border-[var(--btn-color)] object-cover bg-black shadow-[0_0_15px_var(--btn-color)]" alt="Portfolio">
+                    <img id="userAvatar" src="" class="w-12 h-12 rounded-full border-2 object-cover bg-black shadow-lg" style="border-color: var(--btn-color);" alt="Portfolio">
                     <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-black rounded-full"></div>
                 </div>
                 <div>
-                    <h1 id="userName" class="text-lg font-black tracking-tight leading-tight">Agent</h1>
-                    <p class="text-[10px] font-bold text-[var(--btn-color)] uppercase tracking-widest">Vertex Pro</p>
+                    <h1 id="userName" class="text-xl font-black tracking-tight leading-tight text-white">Agent</h1>
+                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Level 1 Nexus</p>
                 </div>
             </div>
             
-            <button onclick="logout()" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-red-500/20 hover:text-red-500 transition-colors">
-                <i class="fa-solid fa-power-off text-sm"></i>
+            <button onclick="logout()" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/60 hover:bg-white/20 transition-colors">
+                <i class="fa-solid fa-arrow-right-from-bracket text-sm"></i>
             </button>
         </header>
 
-        <!-- DYNAMIC CONTENT AREA (Where pages render) -->
-        <main id="app-content" class="flex-1 scroll-area px-6 pt-4">
-            <!-- JS Renders Views Here -->
-        </main>
+        <!-- APP CONTENT ROOT -->
+        <main id="app-content" class="flex-1 scroll-area px-6 pt-2"></main>
     </div>
 
-    <!-- FLOATING BOTTOM NAVIGATION BAR -->
+    <!-- IOS BOTTOM NAVIGATION -->
     <div class="bottom-nav-container">
         <div class="bottom-nav">
-            <div onclick="navigate('home')" id="nav-home" class="nav-btn active">
-                <i class="fa-solid fa-house"></i>
-            </div>
-            <div onclick="navigate('notes')" id="nav-notes" class="nav-btn">
-                <i class="fa-solid fa-bolt"></i>
-            </div>
-            <div onclick="navigate('scheduler')" id="nav-scheduler" class="nav-btn">
-                <i class="fa-solid fa-calendar-check"></i>
-            </div>
-            <div onclick="navigate('doubt')" id="nav-doubt" class="nav-btn">
-                <i class="fa-solid fa-sparkles"></i>
-            </div>
+            <div onclick="navigate('home')" id="nav-home" class="nav-btn active"><i class="fa-solid fa-border-all"></i></div>
+            <div onclick="navigate('notes')" id="nav-notes" class="nav-btn"><i class="fa-solid fa-bolt"></i></div>
+            <div onclick="navigate('scheduler')" id="nav-scheduler" class="nav-btn"><i class="fa-solid fa-calendar-check"></i></div>
+            <div onclick="navigate('doubt')" id="nav-doubt" class="nav-btn"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT ENGINE -->
     <script>
-        const SUPABASE_URL = 'https://memwikauqfvctwbrgmgf.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lbXdpa2F1cWZ2Y3R3YnJnbWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1Njc4NDcsImV4cCI6MjEwNTE0Mzg0N30.f1MbDY5DGxaYwVnOBrN8N0ODWe9ZpYGmiL2NfvyIBCo';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        /* ==========================================================
-           1. THEME ENGINE (Inherits from Auth.html)
-        ========================================================== */
         const themes = {
             'default': { bg: 'https://images.unsplash.com/photo-1695221370216-081498b5ee42?q=80&w=2000', btnColor: '#007AFF' },
             'spiderman': { bg: 'https://images.alphacoders.com/946/946124.jpg', btnColor: '#dc2626' },
@@ -174,46 +126,35 @@
             'football': { bg: 'https://images.unsplash.com/photo-1518605368461-1ee7c688e104?q=80&w=2000', btnColor: '#22c55e' }
         };
 
-        function applySystemTheme() {
-            const savedThemeId = localStorage.getItem('vertex_theme') || 'default';
-            const data = themes[savedThemeId] || themes['default'];
-            const root = document.documentElement;
-            
-            root.style.setProperty('--bg-image', `url('${data.bg}')`);
-            root.style.setProperty('--btn-color', data.btnColor);
-        }
-
-        /* ==========================================================
-           2. SPA VIEWS (App Pages)
-        ========================================================== */
         const Views = {
             home: `
-                <div class="page-fade-enter space-y-5">
-                    <!-- Progress Card -->
-                    <div class="glass-panel p-6 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-[var(--btn-color)] rounded-full blur-[60px] opacity-30"></div>
-                        <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Learning MRI</h3>
-                        <div class="text-3xl font-black text-white mb-4">85% <span class="text-sm font-medium text-gray-400">Focus Score</span></div>
+                <div class="page-fade-enter space-y-4">
+                    <!-- Modern Bento Grid Header -->
+                    <div class="bento-card p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-[var(--btn-color)] rounded-full blur-[60px] opacity-20"></div>
+                        <h3 class="text-xs font-bold text-[var(--btn-color)] uppercase tracking-widest mb-1">Learning MRI</h3>
+                        <div class="text-4xl font-black text-white mb-6">92% <span class="text-sm font-medium text-gray-400">Retention</span></div>
                         
-                        <div class="flex gap-4">
-                            <div class="flex-1 bg-black/40 rounded-xl p-3 border border-white/5">
-                                <div class="text-lg font-bold text-white">12</div>
-                                <div class="text-[9px] uppercase tracking-wider text-gray-500 font-bold">Modules</div>
+                        <div class="flex gap-3">
+                            <div class="flex-1 bg-black/50 rounded-2xl p-4 border border-white/5">
+                                <div class="text-xl font-bold text-white mb-1">14</div>
+                                <div class="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Modules</div>
                             </div>
-                            <div class="flex-1 bg-black/40 rounded-xl p-3 border border-white/5">
-                                <div class="text-lg font-bold text-white flex items-center gap-1">4 <i class="fa-solid fa-fire text-[var(--btn-color)] text-sm"></i></div>
-                                <div class="text-[9px] uppercase tracking-wider text-gray-500 font-bold">Day Streak</div>
+                            <div class="flex-1 bg-black/50 rounded-2xl p-4 border border-white/5">
+                                <div class="text-xl font-bold text-white flex items-center gap-2">5 <i class="fa-solid fa-fire text-[var(--btn-color)] text-sm"></i></div>
+                                <div class="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Streak</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- AI Insights -->
-                    <div class="glass-panel p-5 border-l-4 border-l-[var(--btn-color)]">
-                        <div class="flex gap-3 items-center">
-                            <i class="fa-solid fa-wand-magic-sparkles text-[var(--btn-color)] text-xl"></i>
+                    <div class="bento-card p-5 border-l-4" style="border-left-color: var(--btn-color);">
+                        <div class="flex gap-4 items-center">
+                            <div class="w-10 h-10 rounded-full bg-[var(--btn-color)]/20 flex items-center justify-center text-[var(--btn-color)]">
+                                <i class="fa-solid fa-brain"></i>
+                            </div>
                             <div>
-                                <h4 class="text-sm font-bold text-white">Physics Alert</h4>
-                                <p class="text-xs text-gray-400 mt-1">Review Quantum Mechanics today to maintain your retention curve.</p>
+                                <h4 class="text-sm font-bold text-white">AI Suggestion</h4>
+                                <p class="text-xs text-gray-400 mt-0.5">Revise Quantum Physics today.</p>
                             </div>
                         </div>
                     </div>
@@ -221,98 +162,79 @@
             `,
             notes: `
                 <div class="page-fade-enter space-y-5">
-                    <div class="text-center mb-6 mt-4">
-                        <div class="inline-block p-4 rounded-full bg-[var(--btn-color)]/20 mb-4 shadow-[0_0_20px_var(--btn-color)]">
-                            <i class="fa-solid fa-bolt text-3xl text-[var(--btn-color)]"></i>
+                    <div class="text-center mb-8 mt-6">
+                        <div class="inline-block p-5 rounded-full bg-[var(--btn-color)]/20 mb-4 shadow-[0_0_30px_var(--btn-color)]">
+                            <i class="fa-solid fa-bolt text-4xl text-[var(--btn-color)]"></i>
                         </div>
-                        <h2 class="text-2xl font-black">AI Notes Factory</h2>
-                        <p class="text-xs text-gray-400 mt-2">Paste a link to generate instant structured notes.</p>
+                        <h2 class="text-3xl font-black">AI Notes</h2>
+                        <p class="text-sm text-gray-400 mt-2">Paste link to generate structured notes.</p>
                     </div>
-
-                    <div class="glass-panel p-2 flex items-center">
-                        <input type="text" placeholder="YouTube or PDF URL..." class="flex-1 bg-transparent border-none text-sm px-4 py-2 outline-none text-white placeholder-gray-500">
-                        <button class="bg-[var(--btn-color)] text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold">
+                    <div class="bento-card p-2 flex items-center bg-black/60">
+                        <input type="text" placeholder="YouTube or PDF URL..." class="flex-1 bg-transparent border-none text-sm px-4 py-3 outline-none text-white placeholder-gray-500">
+                        <button class="bg-[var(--btn-color)] text-white w-12 h-12 rounded-2xl flex items-center justify-center font-bold shadow-lg">
                             <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
                 </div>
             `,
             scheduler: `
-                <div class="page-fade-enter space-y-5">
-                    <h2 class="text-xl font-black mb-4">Timeline</h2>
-                    
-                    <div class="glass-panel p-4 flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-[var(--btn-color)]/20 text-[var(--btn-color)] flex flex-col items-center justify-center border border-[var(--btn-color)]/50">
+                <div class="page-fade-enter space-y-4">
+                    <h2 class="text-2xl font-black mb-4">Timeline</h2>
+                    <div class="bento-card p-5 flex items-center gap-4 bg-[var(--btn-color)]/10 border-[var(--btn-color)]/30">
+                        <div class="w-14 h-14 rounded-full bg-[var(--btn-color)] text-white flex flex-col items-center justify-center shadow-[0_0_15px_var(--btn-color)]">
                             <span class="text-xs font-black">NOW</span>
                         </div>
                         <div>
-                            <h4 class="text-sm font-bold">Math Integration</h4>
-                            <p class="text-xs text-gray-400">Chapter 4 Practice</p>
+                            <h4 class="text-base font-bold">Math Integration</h4>
+                            <p class="text-xs text-[var(--btn-color)] font-bold uppercase mt-1">In Progress</p>
                         </div>
-                        <i class="fa-solid fa-play ml-auto text-[var(--btn-color)]"></i>
-                    </div>
-
-                    <div class="glass-panel p-4 flex items-center gap-4 opacity-60">
-                        <div class="w-12 h-12 rounded-full bg-white/5 text-gray-400 flex flex-col items-center justify-center border border-white/10">
-                            <span class="text-xs font-black">14:00</span>
-                        </div>
-                        <div>
-                            <h4 class="text-sm font-bold">Physics Lecture</h4>
-                            <p class="text-xs text-gray-400">Video Session</p>
-                        </div>
-                        <i class="fa-solid fa-lock ml-auto text-gray-500"></i>
+                        <i class="fa-solid fa-play ml-auto text-[var(--btn-color)] text-xl"></i>
                     </div>
                 </div>
             `,
             doubt: `
-                <div class="page-fade-enter h-full flex flex-col items-center justify-center pt-10">
-                    <i class="fa-solid fa-sparkles text-5xl text-[var(--btn-color)] animate-pulse mb-6"></i>
-                    <h2 class="text-2xl font-black text-center mb-2">Vertex AI Agent</h2>
-                    <p class="text-sm text-gray-400 text-center px-6">Your personal doubt solver is currently initializing. Neural network syncing in progress.</p>
+                <div class="page-fade-enter h-full flex flex-col items-center justify-center pt-16">
+                    <div class="relative mb-6">
+                        <div class="absolute inset-0 bg-[var(--btn-color)] blur-3xl opacity-30 rounded-full animate-pulse"></div>
+                        <i class="fa-solid fa-wand-magic-sparkles text-6xl text-[var(--btn-color)] relative z-10"></i>
+                    </div>
+                    <h2 class="text-3xl font-black text-center mb-3">AI Agent</h2>
+                    <p class="text-sm text-gray-400 text-center px-6">Your personal doubt solver is currently syncing with the mainframe.</p>
                 </div>
             `
         };
 
-        /* ==========================================================
-           3. ROUTING & CONTROLLER
-        ========================================================== */
         function navigate(tab) {
-            // Update UI Content
             document.getElementById('app-content').innerHTML = Views[tab];
-            
-            // Update Active Tab in Bottom Nav
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`nav-${tab}`).classList.add('active');
         }
 
-        async function initApp() {
-            applySystemTheme();
-
-            // Check Auth Security
-            const { data: { session }, error } = await supabaseClient.auth.getSession();
-            if (error || !session) {
-                window.location.href = '/auth.html';
-                return;
+        function initApp() {
+            // Safe URL parser to clean up cache-buster from URL if you want a clean link
+            if(window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.pathname);
             }
 
-            // Set Top-Left Portfolio Data
-            const name = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
-            const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
-            document.getElementById('userName').innerText = formattedName;
-            document.getElementById('userAvatar').src = `https://api.dicebear.com/7.x/notionists/svg?seed=${formattedName}&backgroundColor=transparent`;
+            const savedThemeId = localStorage.getItem('vertex_theme') || 'default';
+            const data = themes[savedThemeId] || themes['default'];
+            const root = document.documentElement;
+            root.style.setProperty('--bg-image', `url('${data.bg}')`);
+            root.style.setProperty('--btn-color', data.btnColor);
 
-            // Load default home screen
+            const rawName = localStorage.getItem('vertex_dummy_user') || 'Agent L';
+            document.getElementById('userName').innerText = rawName.toUpperCase();
+            document.getElementById('userAvatar').src = `https://api.dicebear.com/7.x/notionists/svg?seed=${rawName}&backgroundColor=transparent`;
+
             navigate('home');
         }
 
-        async function logout() {
-            await supabaseClient.auth.signOut();
-            window.location.href = '/auth.html';
+        function logout() {
+            localStorage.removeItem('vertex_dummy_user');
+            window.location.href = 'auth.html'; // Direct redirect back to clean auth
         }
 
-        // Boot Application
         document.addEventListener('DOMContentLoaded', initApp);
-
     </script>
 </body>
 </html>

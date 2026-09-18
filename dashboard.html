@@ -2,395 +2,307 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VERTEX NEXUS | Command Center</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>VERTEX | App Interface</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Supabase Core -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         :root {
-            --bg-color: #050505;
-            --card-bg: rgba(20, 20, 25, 0.45);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --accent: #a855f7; /* Neon Purple */
-            --accent-secondary: #f97316; /* Coral Orange */
+            --bg-image: url('https://images.unsplash.com/photo-1695221370216-081498b5ee42?q=80&w=2000');
+            --btn-color: #007AFF;
+            --glass-bg: rgba(10, 10, 10, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-color: #ffffff;
+            --nav-bg: rgba(0, 0, 0, 0.65);
         }
 
+        /* 120Hz App Base */
         body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-color);
-            color: #ffffff;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: #000;
+            color: var(--text-color);
+            margin: 0; padding: 0;
+            height: 100dvh; /* Mobile viewport fix */
             overflow: hidden;
+            display: flex; flex-direction: column;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* 3D Glowing Mesh Background */
-        .mesh-bg {
+        /* Dynamic Background Engine */
+        #app-background {
             position: fixed; inset: 0; z-index: -2;
-            background: #000;
+            background-image: var(--bg-image);
+            background-size: cover; background-position: center;
+            transition: background-image 0.8s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        .blob-1 { position: absolute; width: 600px; height: 600px; background: #a855f7; border-radius: 50%; filter: blur(150px); opacity: 0.15; top: -10%; left: -10%; animation: float1 15s ease-in-out infinite alternate; }
-        .blob-2 { position: absolute; width: 500px; height: 500px; background: #f97316; border-radius: 50%; filter: blur(150px); opacity: 0.1; bottom: -10%; right: -10%; animation: float2 12s ease-in-out infinite alternate; }
-        .blob-3 { position: absolute; width: 400px; height: 400px; background: #3b82f6; border-radius: 50%; filter: blur(120px); opacity: 0.1; top: 40%; left: 40%; animation: float1 10s ease-in-out infinite alternate-reverse; }
         
-        @keyframes float1 { 0% { transform: translate(0,0); } 100% { transform: translate(100px, 50px); } }
-        @keyframes float2 { 0% { transform: translate(0,0); } 100% { transform: translate(-100px, -50px); } }
-
-        /* Noise Overlay for Premium Texture */
-        .noise-overlay {
-            position: fixed; inset: 0; z-index: -1; opacity: 0.03; pointer-events: none;
-            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');
+        /* Dark Gradient Overlay for readability */
+        .bg-overlay {
+            position: fixed; inset: 0; z-index: -1;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
         }
 
-        /* Ultra Premium Glass Panel */
+        /* Pro Glass Panels */
         .glass-panel {
-            background: var(--card-bg);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
             backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            border: 1px solid var(--card-border);
             border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .glass-panel:hover {
-            border-color: rgba(255,255,255,0.15);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
         }
 
-        /* Sidebar Navigation Hover */
-        .nav-item {
-            color: rgba(255,255,255,0.5); transition: all 0.3s ease; position: relative; overflow: hidden;
+        /* --------------------------------------
+           FLOATING BOTTOM NAVIGATION BAR (iOS Style)
+           -------------------------------------- */
+        .bottom-nav-container {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; z-index: 100;
         }
-        .nav-item:hover, .nav-item.active { color: #fff; background: rgba(255,255,255,0.05); }
-        .nav-item.active::before {
-            content: ''; position: absolute; left: 0; top: 20%; bottom: 20%; width: 4px;
-            background: var(--accent); border-radius: 0 4px 4px 0; box-shadow: 0 0 10px var(--accent);
+        .bottom-nav {
+            background: var(--nav-bg);
+            backdrop-filter: blur(30px) saturate(200%); -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 100px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
-        .nav-icon { transition: all 0.3s ease; }
-        .nav-item:hover .nav-icon, .nav-item.active .nav-icon { color: var(--accent); transform: scale(1.1); filter: drop-shadow(0 0 8px var(--accent)); }
+        .nav-btn {
+            position: relative;
+            width: 50px; height: 50px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.5);
+            border-radius: 50%; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        /* Active State Indicator */
+        .nav-btn.active {
+            color: var(--text-color);
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .nav-btn i { font-size: 20px; z-index: 2; transition: transform 0.3s ease; }
+        .nav-btn.active i { color: var(--btn-color); transform: scale(1.1); filter: drop-shadow(0 0 10px var(--btn-color)); }
+        
+        /* Smooth Page Transitions */
+        .page-fade-enter { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
-
-        /* Progress Rings & Bars */
-        .progress-bar-bg { background: rgba(255,255,255,0.05); border-radius: 100px; height: 8px; overflow: hidden; }
-        .progress-bar-fill { background: linear-gradient(90deg, var(--accent), var(--accent-secondary)); height: 100%; border-radius: 100px; box-shadow: 0 0 10px var(--accent); }
-
-        /* Staggered Entrance Animations */
-        .stag { opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .d-1 { animation-delay: 0.1s; } .d-2 { animation-delay: 0.2s; } .d-3 { animation-delay: 0.3s; } .d-4 { animation-delay: 0.4s; }
-        @keyframes fadeUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
-
-        /* Full Screen Loader */
-        #loader {
-            position: fixed; inset: 0; background: #050505; z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .loader-ring {
-            width: 60px; height: 60px; border: 3px solid rgba(255,255,255,0.1);
-            border-top-color: var(--accent); border-radius: 50%;
-            animation: spin 1s linear infinite; box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .scroll-area { overflow-y: auto; overflow-x: hidden; padding-bottom: 120px; }
+        .scroll-area::-webkit-scrollbar { display: none; } /* Hidden for native app feel */
     </style>
 </head>
-<body class="flex h-screen w-full">
+<body>
 
-    <!-- BACKGROUND ENGINE -->
-    <div class="mesh-bg">
-        <div class="blob-1"></div><div class="blob-2"></div><div class="blob-3"></div>
-    </div>
-    <div class="noise-overlay"></div>
+    <!-- Background Layer -->
+    <div id="app-background"></div>
+    <div class="bg-overlay"></div>
 
-    <!-- SECURITY LOADER -->
-    <div id="loader">
-        <div class="loader-ring mb-4"></div>
-        <div class="text-[10px] uppercase tracking-widest text-white/50 font-bold animate-pulse">Establishing Secure Connection...</div>
-    </div>
-
-    <!-- SIDEBAR (DESKTOP) -->
-    <aside class="w-[280px] hidden lg:flex flex-col h-full border-r border-white/5 bg-black/20 backdrop-blur-md p-6 z-20">
+    <!-- MAIN APP CONTAINER -->
+    <div class="flex flex-col h-full w-full max-w-2xl mx-auto relative z-10">
         
-        <!-- Logo -->
-        <div class="flex items-center gap-3 mb-12">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center font-black text-xl text-white shadow-[0_0_15px_rgba(168,85,247,0.4)]" style="background: var(--accent);">V</div>
-            <span class="text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">VERTEX</span>
-        </div>
-
-        <!-- Navigation -->
-        <nav class="flex-1 space-y-2">
-            <a href="#" class="nav-item active flex items-center gap-4 px-4 py-3.5 rounded-xl font-bold text-sm">
-                <i class="fa-solid fa-border-all nav-icon text-lg w-6 text-center"></i> Nexus Dashboard
-            </a>
-            <a href="#" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl font-bold text-sm">
-                <i class="fa-solid fa-brain nav-icon text-lg w-6 text-center"></i> Learning MRI
-            </a>
-            <a href="#" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl font-bold text-sm">
-                <i class="fa-solid fa-bolt nav-icon text-lg w-6 text-center"></i> AI Notes Factory
-            </a>
-            <a href="#" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl font-bold text-sm">
-                <i class="fa-solid fa-calendar-day nav-icon text-lg w-6 text-center"></i> Auto Scheduler
-            </a>
-            <a href="#" class="nav-item flex items-center gap-4 px-4 py-3.5 rounded-xl font-bold text-sm">
-                <i class="fa-solid fa-comment-dots nav-icon text-lg w-6 text-center"></i> Doubt Solver
-            </a>
-        </nav>
-
-        <!-- User Profile Mini -->
-        <div class="mt-auto pt-6 border-t border-white/5 flex items-center gap-3">
-            <img id="sidebarAvatar" src="https://api.dicebear.com/7.x/notionists/svg?seed=User&backgroundColor=transparent" class="w-10 h-10 rounded-full bg-white/10 border border-white/20" alt="Avatar">
-            <div class="flex-1 overflow-hidden">
-                <div id="sidebarName" class="text-sm font-bold truncate">Student</div>
-                <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Premium Plan</div>
+        <!-- HEADER: TOP LEFT PORTFOLIO -->
+        <header class="px-6 pt-12 pb-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <img id="userAvatar" src="https://api.dicebear.com/7.x/notionists/svg?seed=User&backgroundColor=transparent" class="w-12 h-12 rounded-full border-2 border-[var(--btn-color)] object-cover bg-black shadow-[0_0_15px_var(--btn-color)]" alt="Portfolio">
+                    <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-black rounded-full"></div>
+                </div>
+                <div>
+                    <h1 id="userName" class="text-lg font-black tracking-tight leading-tight">Agent</h1>
+                    <p class="text-[10px] font-bold text-[var(--btn-color)] uppercase tracking-widest">Vertex Pro</p>
+                </div>
             </div>
-            <button onclick="logout()" class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-red-400 hover:bg-red-400/10 transition-all">
-                <i class="fa-solid fa-power-off"></i>
+            
+            <button onclick="logout()" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-red-500/20 hover:text-red-500 transition-colors">
+                <i class="fa-solid fa-power-off text-sm"></i>
             </button>
-        </div>
-    </aside>
-
-    <!-- MAIN DASHBOARD AREA -->
-    <main class="flex-1 h-full overflow-y-auto custom-scrollbar relative z-10">
-        
-        <!-- MOBILE HEADER -->
-        <header class="lg:hidden flex justify-between items-center p-6 border-b border-white/5 bg-black/20 backdrop-blur-md sticky top-0 z-30">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-lg flex items-center justify-center font-black text-white shadow-[0_0_10px_rgba(168,85,247,0.4)]" style="background: var(--accent);">V</div>
-                <span class="text-xl font-black tracking-widest">VERTEX</span>
-            </div>
-            <img id="mobileAvatar" src="https://api.dicebear.com/7.x/notionists/svg?seed=User&backgroundColor=transparent" class="w-8 h-8 rounded-full bg-white/10 border border-white/20" onclick="logout()" alt="Avatar">
         </header>
 
-        <div class="p-6 md:p-10 max-w-7xl mx-auto">
-            
-            <!-- TOP WELCOME BANNER -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 stag d-1">
-                <div>
-                    <div class="text-[10px] uppercase font-bold tracking-widest text-[var(--accent)] mb-2 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse"></span> SYSTEM ONLINE
-                    </div>
-                    <h1 class="text-4xl md:text-5xl font-black tracking-tight">
-                        Welcome back, <br/><span id="mainName" class="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">Student</span>
-                    </h1>
-                </div>
-                <div class="mt-4 md:mt-0 px-5 py-3 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-4 backdrop-blur-md">
-                    <div>
-                        <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Today's Focus</div>
-                        <div class="text-sm font-bold">Quantum Computing</div>
-                    </div>
-                    <div class="w-10 h-10 rounded-full border-2 border-[var(--accent)] flex items-center justify-center text-xs font-bold text-[var(--accent)] shadow-[0_0_10px_rgba(168,85,247,0.3)]">
-                        85%
-                    </div>
-                </div>
+        <!-- DYNAMIC CONTENT AREA (Where pages render) -->
+        <main id="app-content" class="flex-1 scroll-area px-6 pt-4">
+            <!-- JS Renders Views Here -->
+        </main>
+    </div>
+
+    <!-- FLOATING BOTTOM NAVIGATION BAR -->
+    <div class="bottom-nav-container">
+        <div class="bottom-nav">
+            <div onclick="navigate('home')" id="nav-home" class="nav-btn active">
+                <i class="fa-solid fa-house"></i>
             </div>
-
-            <!-- GRID LAYOUT -->
-            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                
-                <!-- LEFT COLUMN (Spans 2 on large screens) -->
-                <div class="xl:col-span-2 space-y-6">
-                    
-                    <!-- LEARNING MRI (Analytics) -->
-                    <div class="glass-panel p-6 md:p-8 stag d-2">
-                        <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-xl font-black tracking-wide"><i class="fa-solid fa-brain text-[var(--accent)] mr-2"></i> Learning MRI</h2>
-                            <button class="text-xs font-bold text-gray-400 hover:text-white transition-colors">Full Report <i class="fa-solid fa-arrow-right ml-1"></i></button>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <!-- Stat 1 -->
-                            <div class="bg-black/30 rounded-2xl p-5 border border-white/5">
-                                <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Knowledge Retention</div>
-                                <div class="text-3xl font-black text-white mb-3">92<span class="text-lg text-gray-500">%</span></div>
-                                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 92%;"></div></div>
-                            </div>
-                            <!-- Stat 2 -->
-                            <div class="bg-black/30 rounded-2xl p-5 border border-white/5">
-                                <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Modules Conquered</div>
-                                <div class="text-3xl font-black text-white mb-3">24<span class="text-lg text-gray-500">/30</span></div>
-                                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 80%; background: linear-gradient(90deg, #3b82f6, #06b6d4);"></div></div>
-                            </div>
-                            <!-- Stat 3 -->
-                            <div class="bg-black/30 rounded-2xl p-5 border border-white/5 relative overflow-hidden group cursor-pointer">
-                                <div class="absolute inset-0 bg-gradient-to-br from-[var(--accent-secondary)] to-red-600 opacity-20 group-hover:opacity-40 transition-opacity"></div>
-                                <div class="text-[10px] text-white/70 font-bold uppercase tracking-widest mb-1 relative z-10">Current Streak</div>
-                                <div class="text-4xl font-black text-white mb-1 relative z-10 flex items-center gap-2">
-                                    7 <i class="fa-solid fa-fire text-[var(--accent-secondary)]"></i>
-                                </div>
-                                <div class="text-xs font-bold text-[var(--accent-secondary)] relative z-10">Unstoppable!</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- AI NOTES FACTORY -->
-                    <div class="glass-panel p-6 md:p-8 stag d-3 relative overflow-hidden group">
-                        <!-- Decorative background element -->
-                        <div class="absolute -right-20 -top-20 w-64 h-64 bg-[var(--accent)] rounded-full blur-[100px] opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
-                        
-                        <div class="relative z-10 flex flex-col md:flex-row gap-8 items-center">
-                            <div class="flex-1">
-                                <div class="inline-block px-3 py-1 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/30 text-[10px] font-bold text-[var(--accent)] tracking-widest uppercase mb-4">
-                                    <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Core Tool
-                                </div>
-                                <h2 class="text-3xl font-black tracking-tight mb-2">AI Notes Factory</h2>
-                                <p class="text-sm text-gray-400 font-medium mb-6">Drop a YouTube link or PDF. VERTEX will instantly generate structured, mind-map level revision notes.</p>
-                                
-                                <div class="flex gap-2">
-                                    <input type="text" placeholder="Paste link here..." class="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[var(--accent)] transition-all">
-                                    <button class="bg-white text-black font-black px-6 py-3 rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 transition-transform">
-                                        Generate
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Visual Element -->
-                            <div class="w-full md:w-48 h-48 bg-black/40 rounded-2xl border border-white/10 flex flex-col items-center justify-center border-dashed group-hover:border-[var(--accent)]/50 transition-colors cursor-pointer">
-                                <i class="fa-solid fa-cloud-arrow-up text-4xl text-gray-500 mb-3 group-hover:text-[var(--accent)] transition-colors transform group-hover:-translate-y-2 duration-300"></i>
-                                <span class="text-xs font-bold text-gray-400 text-center px-4">Drag & Drop PDFs<br/>or Docs here</span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div> <!-- End Left Column -->
-
-                <!-- RIGHT COLUMN -->
-                <div class="space-y-6">
-                    
-                    <!-- AUTO SCHEDULER -->
-                    <div class="glass-panel p-6 stag d-4 h-full flex flex-col">
-                        <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-lg font-black tracking-wide"><i class="fa-regular fa-calendar-check text-[#3b82f6] mr-2"></i> Auto Scheduler</h2>
-                            <div class="text-[10px] uppercase font-bold text-gray-500">Today</div>
-                        </div>
-
-                        <!-- Timeline -->
-                        <div class="flex-1 space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-white/10 before:to-transparent">
-                            
-                            <!-- Task 1 (Active) -->
-                            <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                                <div class="flex items-center justify-center w-10 h-10 rounded-full border border-[var(--accent)] bg-black shadow-[0_0_15px_rgba(168,85,247,0.4)] text-[var(--accent)] shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
-                                    <i class="fa-solid fa-play text-xs"></i>
-                                </div>
-                                <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white/5 border border-[var(--accent)]/30 p-4 rounded-xl backdrop-blur-sm">
-                                    <div class="flex items-center justify-between mb-1">
-                                        <div class="text-sm font-bold text-white">Quantum Physics</div>
-                                        <div class="text-[10px] font-bold text-[var(--accent)] bg-[var(--accent)]/10 px-2 py-0.5 rounded">NOW</div>
-                                    </div>
-                                    <div class="text-xs text-gray-400">Module 4: Entanglement</div>
-                                </div>
-                            </div>
-
-                            <!-- Task 2 (Upcoming) -->
-                            <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                                <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white/20 bg-black text-gray-500 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
-                                    <i class="fa-solid fa-lock text-xs"></i>
-                                </div>
-                                <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-black/40 border border-white/5 p-4 rounded-xl">
-                                    <div class="flex items-center justify-between mb-1">
-                                        <div class="text-sm font-bold text-gray-300">Math Assessment</div>
-                                        <div class="text-[10px] font-bold text-gray-500">14:00</div>
-                                    </div>
-                                    <div class="text-xs text-gray-500">Practice Set B</div>
-                                </div>
-                            </div>
-
-                            <!-- Task 3 (Upcoming) -->
-                            <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                                <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white/20 bg-black text-gray-500 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
-                                    <i class="fa-solid fa-lock text-xs"></i>
-                                </div>
-                                <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-black/40 border border-white/5 p-4 rounded-xl">
-                                    <div class="flex items-center justify-between mb-1">
-                                        <div class="text-sm font-bold text-gray-300">AI Notes Review</div>
-                                        <div class="text-[10px] font-bold text-gray-500">18:30</div>
-                                    </div>
-                                    <div class="text-xs text-gray-500">History Chapter 2</div>
-                                </div>
-                            </div>
-
-                        </div>
-                        
-                        <button class="w-full mt-6 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-colors">
-                            View Full Week
-                        </button>
-                    </div>
-
-                </div> <!-- End Right Column -->
+            <div onclick="navigate('notes')" id="nav-notes" class="nav-btn">
+                <i class="fa-solid fa-bolt"></i>
             </div>
-
-            <!-- FLOATING DOUBT SOLVER BUTTON (Fixed bottom right) -->
-            <button class="fixed bottom-6 right-6 md:bottom-10 md:right-10 w-16 h-16 rounded-full bg-white text-black text-2xl flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.4)] hover:scale-110 active:scale-95 transition-all z-50 group">
-                <i class="fa-solid fa-sparkles group-hover:rotate-12 transition-transform"></i>
-                <span class="absolute -top-10 right-0 bg-black text-white text-[10px] font-bold px-3 py-1.5 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/20">Ask AI Doubt Solver</span>
-            </button>
-
+            <div onclick="navigate('scheduler')" id="nav-scheduler" class="nav-btn">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+            <div onclick="navigate('doubt')" id="nav-doubt" class="nav-btn">
+                <i class="fa-solid fa-sparkles"></i>
+            </div>
         </div>
-    </main>
+    </div>
 
-    <!-- AUTHENTICATION & DATA SCRIPT -->
+    <!-- JAVASCRIPT ENGINE -->
     <script>
-        const supabaseUrl = 'https://memwikauqfvctwbrgmgf.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lbXdpa2F1cWZ2Y3R3YnJnbWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1Njc4NDcsImV4cCI6MjEwNTE0Mzg0N30.f1MbDY5DGxaYwVnOBrN8N0ODWe9ZpYGmiL2NfvyIBCo';
-        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+        const SUPABASE_URL = 'https://memwikauqfvctwbrgmgf.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lbXdpa2F1cWZ2Y3R3YnJnbWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1Njc4NDcsImV4cCI6MjEwNTE0Mzg0N30.f1MbDY5DGxaYwVnOBrN8N0ODWe9ZpYGmiL2NfvyIBCo';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Session validation
-        async function checkSession() {
-            const { data, error } = await supabaseClient.auth.getSession();
+        /* ==========================================================
+           1. THEME ENGINE (Inherits from Auth.html)
+        ========================================================== */
+        const themes = {
+            'default': { bg: 'https://images.unsplash.com/photo-1695221370216-081498b5ee42?q=80&w=2000', btnColor: '#007AFF' },
+            'spiderman': { bg: 'https://images.alphacoders.com/946/946124.jpg', btnColor: '#dc2626' },
+            'batman': { bg: 'https://images.alphacoders.com/123/1230114.jpg', btnColor: '#eab308' },
+            'superman': { bg: 'https://images.alphacoders.com/264/264509.jpg', btnColor: '#2563eb' },
+            'naruto': { bg: 'https://images2.alphacoders.com/131/1314488.jpeg', btnColor: '#f97316' },
+            'onepiece': { bg: 'https://images.alphacoders.com/132/1321049.jpeg', btnColor: '#ef4444' },
+            'f1race': { bg: 'https://images.unsplash.com/photo-1534484080702-861cda411808?q=80&w=2000', btnColor: '#ef4444' },
+            'cricket': { bg: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2000', btnColor: '#0ea5e9' },
+            'football': { bg: 'https://images.unsplash.com/photo-1518605368461-1ee7c688e104?q=80&w=2000', btnColor: '#22c55e' }
+        };
+
+        function applySystemTheme() {
+            const savedThemeId = localStorage.getItem('vertex_theme') || 'default';
+            const data = themes[savedThemeId] || themes['default'];
+            const root = document.documentElement;
             
-            if (error || !data.session) {
-                // Not logged in -> Kick out to auth screen
-                window.location.href = '/auth.html';
-            } else {
-                // Logged in -> Setup Profile
-                const user = data.session.user;
-                
-                // Get name or email prefix
-                const fullName = user.user_metadata?.full_name || user.email.split('@')[0];
-                
-                // Capitalize first letter
-                const formattedName = fullName.charAt(0).toUpperCase() + fullName.slice(1);
-                
-                // Update UI elements
-                document.getElementById('mainName').innerText = formattedName;
-                document.getElementById('sidebarName').innerText = formattedName;
-                
-                // Generate dynamic profile avatar based on name
-                const avatarUrl = `https://api.dicebear.com/7.x/notionists/svg?seed=${formattedName}&backgroundColor=transparent`;
-                document.getElementById('sidebarAvatar').src = avatarUrl;
-                document.getElementById('mobileAvatar').src = avatarUrl;
-
-                // Load custom theme if saved from auth page
-                applySavedTheme();
-
-                // Remove loader smoothly
-                setTimeout(() => {
-                    const loader = document.getElementById('loader');
-                    loader.style.opacity = '0';
-                    setTimeout(() => loader.style.display = 'none', 500);
-                }, 800); // 800ms fake loading for visual premium effect
-            }
+            root.style.setProperty('--bg-image', `url('${data.bg}')`);
+            root.style.setProperty('--btn-color', data.btnColor);
         }
 
-        // Apply theme colors globally if selected in auth.html
-        function applySavedTheme() {
-            const savedThemeId = localStorage.getItem('vertex_theme');
-            if(savedThemeId) {
-                // We map the accent colors based on previous auth themes
-                const themeAccents = {
-                    'naruto': '#f97316',
-                    'deathnote': '#dc2626',
-                    'batman': '#eab308',
-                    'ayanokoji': '#ffffff',
-                    'mumbai': '#0284c7'
-                };
-                if(themeAccents[savedThemeId]) {
-                    document.documentElement.style.setProperty('--accent', themeAccents[savedThemeId]);
-                }
+        /* ==========================================================
+           2. SPA VIEWS (App Pages)
+        ========================================================== */
+        const Views = {
+            home: `
+                <div class="page-fade-enter space-y-5">
+                    <!-- Progress Card -->
+                    <div class="glass-panel p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-[var(--btn-color)] rounded-full blur-[60px] opacity-30"></div>
+                        <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Learning MRI</h3>
+                        <div class="text-3xl font-black text-white mb-4">85% <span class="text-sm font-medium text-gray-400">Focus Score</span></div>
+                        
+                        <div class="flex gap-4">
+                            <div class="flex-1 bg-black/40 rounded-xl p-3 border border-white/5">
+                                <div class="text-lg font-bold text-white">12</div>
+                                <div class="text-[9px] uppercase tracking-wider text-gray-500 font-bold">Modules</div>
+                            </div>
+                            <div class="flex-1 bg-black/40 rounded-xl p-3 border border-white/5">
+                                <div class="text-lg font-bold text-white flex items-center gap-1">4 <i class="fa-solid fa-fire text-[var(--btn-color)] text-sm"></i></div>
+                                <div class="text-[9px] uppercase tracking-wider text-gray-500 font-bold">Day Streak</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Insights -->
+                    <div class="glass-panel p-5 border-l-4 border-l-[var(--btn-color)]">
+                        <div class="flex gap-3 items-center">
+                            <i class="fa-solid fa-wand-magic-sparkles text-[var(--btn-color)] text-xl"></i>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">Physics Alert</h4>
+                                <p class="text-xs text-gray-400 mt-1">Review Quantum Mechanics today to maintain your retention curve.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            notes: `
+                <div class="page-fade-enter space-y-5">
+                    <div class="text-center mb-6 mt-4">
+                        <div class="inline-block p-4 rounded-full bg-[var(--btn-color)]/20 mb-4 shadow-[0_0_20px_var(--btn-color)]">
+                            <i class="fa-solid fa-bolt text-3xl text-[var(--btn-color)]"></i>
+                        </div>
+                        <h2 class="text-2xl font-black">AI Notes Factory</h2>
+                        <p class="text-xs text-gray-400 mt-2">Paste a link to generate instant structured notes.</p>
+                    </div>
+
+                    <div class="glass-panel p-2 flex items-center">
+                        <input type="text" placeholder="YouTube or PDF URL..." class="flex-1 bg-transparent border-none text-sm px-4 py-2 outline-none text-white placeholder-gray-500">
+                        <button class="bg-[var(--btn-color)] text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `,
+            scheduler: `
+                <div class="page-fade-enter space-y-5">
+                    <h2 class="text-xl font-black mb-4">Timeline</h2>
+                    
+                    <div class="glass-panel p-4 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-[var(--btn-color)]/20 text-[var(--btn-color)] flex flex-col items-center justify-center border border-[var(--btn-color)]/50">
+                            <span class="text-xs font-black">NOW</span>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold">Math Integration</h4>
+                            <p class="text-xs text-gray-400">Chapter 4 Practice</p>
+                        </div>
+                        <i class="fa-solid fa-play ml-auto text-[var(--btn-color)]"></i>
+                    </div>
+
+                    <div class="glass-panel p-4 flex items-center gap-4 opacity-60">
+                        <div class="w-12 h-12 rounded-full bg-white/5 text-gray-400 flex flex-col items-center justify-center border border-white/10">
+                            <span class="text-xs font-black">14:00</span>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold">Physics Lecture</h4>
+                            <p class="text-xs text-gray-400">Video Session</p>
+                        </div>
+                        <i class="fa-solid fa-lock ml-auto text-gray-500"></i>
+                    </div>
+                </div>
+            `,
+            doubt: `
+                <div class="page-fade-enter h-full flex flex-col items-center justify-center pt-10">
+                    <i class="fa-solid fa-sparkles text-5xl text-[var(--btn-color)] animate-pulse mb-6"></i>
+                    <h2 class="text-2xl font-black text-center mb-2">Vertex AI Agent</h2>
+                    <p class="text-sm text-gray-400 text-center px-6">Your personal doubt solver is currently initializing. Neural network syncing in progress.</p>
+                </div>
+            `
+        };
+
+        /* ==========================================================
+           3. ROUTING & CONTROLLER
+        ========================================================== */
+        function navigate(tab) {
+            // Update UI Content
+            document.getElementById('app-content').innerHTML = Views[tab];
+            
+            // Update Active Tab in Bottom Nav
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`nav-${tab}`).classList.add('active');
+        }
+
+        async function initApp() {
+            applySystemTheme();
+
+            // Check Auth Security
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            if (error || !session) {
+                window.location.href = '/auth.html';
+                return;
             }
+
+            // Set Top-Left Portfolio Data
+            const name = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
+            const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+            document.getElementById('userName').innerText = formattedName;
+            document.getElementById('userAvatar').src = `https://api.dicebear.com/7.x/notionists/svg?seed=${formattedName}&backgroundColor=transparent`;
+
+            // Load default home screen
+            navigate('home');
         }
 
         async function logout() {
@@ -398,7 +310,9 @@
             window.location.href = '/auth.html';
         }
 
-        window.onload = checkSession;
+        // Boot Application
+        document.addEventListener('DOMContentLoaded', initApp);
+
     </script>
 </body>
 </html>

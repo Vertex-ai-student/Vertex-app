@@ -7,13 +7,10 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome for clean iOS style icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         :root {
-            /* Default variables (Will be updated by JS safely) */
             --bg-image: url('https://images.unsplash.com/photo-1695221370216-081498b5ee42?q=80&w=2000');
             --btn-color: #007AFF;
             --glass-bg: rgba(255, 255, 255, 0.6);
@@ -31,91 +28,61 @@
             background-attachment: fixed;
             color: var(--text-color);
             margin: 0; padding: 0; overflow-x: hidden;
-            /* 120Hz Smooth Transition */
             transition: background-image 0.8s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         * { -webkit-font-smoothing: antialiased; }
 
-        /* The Ultimate iOS Frosted Glass */
         .auth-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(30px) saturate(200%);
-            -webkit-backdrop-filter: blur(30px) saturate(200%);
-            border: 1px solid var(--glass-border);
-            border-radius: 32px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            transition: all 0.5s ease;
+            backdrop-filter: blur(30px) saturate(200%); -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 1px solid var(--glass-border); border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); transition: all 0.5s ease;
         }
 
-        /* Clean Inputs */
         .ios-input {
-            width: 100%;
-            background: var(--input-bg);
-            border: 1px solid var(--glass-border);
-            color: var(--text-color);
-            border-radius: 16px;
-            padding: 16px 20px;
-            font-size: 15px; font-weight: 500;
-            outline: none;
-            transition: all 0.2s ease;
+            width: 100%; background: var(--input-bg); border: 1px solid var(--glass-border);
+            color: var(--text-color); border-radius: 16px; padding: 16px 20px;
+            font-size: 15px; font-weight: 600; outline: none; transition: all 0.2s ease;
         }
         .ios-input::placeholder { color: var(--text-color); opacity: 0.5; }
         .ios-input:focus {
-            border-color: var(--btn-color);
-            background: transparent;
-            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+            border-color: var(--btn-color); background: transparent;
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
         }
 
-        /* Primary Action Button */
         .ios-btn {
-            width: 100%;
-            background: var(--btn-color);
-            color: #ffffff;
-            font-weight: 600; font-size: 16px;
-            border-radius: 16px;
-            padding: 16px;
-            border: none; cursor: pointer;
-            transition: transform 0.1s ease, opacity 0.2s ease;
+            width: 100%; background: var(--btn-color); color: #ffffff;
+            font-weight: 700; font-size: 16px; border-radius: 16px; padding: 16px;
+            border: none; cursor: pointer; transition: transform 0.1s ease, opacity 0.2s ease;
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .ios-btn:active { transform: scale(0.96); opacity: 0.8; }
 
-        /* Full Screen Cinematic Overlay */
         #cinematicOverlay {
-            position: fixed; inset: 0; z-index: 9999;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            display: flex; flex-direction: column; items-center justify-center;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.4s ease;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
         }
         #cinematicOverlay.active { opacity: 1; pointer-events: auto; }
         
         .action-gif-container {
-            width: 100%; max-width: 500px; height: 300px;
+            width: 100%; max-width: 400px; height: 300px;
             display: flex; align-items: center; justify-content: center;
         }
-        .action-gif {
-            max-width: 100%; max-height: 100%;
-            object-fit: contain; border-radius: 16px;
-        }
+        .action-gif { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen; }
 
-        /* Bottom Sheet for Themes */
         .theme-sheet {
             position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
             border-radius: 32px 32px 0 0; padding: 24px; z-index: 100;
-            transform: translateY(100%);
-            transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+            transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
             box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
         }
         .theme-sheet.active { transform: translateY(0); }
-        
-        .theme-btn {
-            flex-shrink: 0; width: 70px; display: flex; flex-direction: column; items-center; gap: 8px; cursor: pointer;
-        }
+        .theme-btn { flex-shrink: 0; width: 70px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
         .theme-icon {
             width: 60px; height: 60px; border-radius: 50%; background-size: cover; background-position: center;
             border: 2px solid transparent; transition: all 0.2s ease;
@@ -123,182 +90,113 @@
         .theme-btn:hover .theme-icon { transform: scale(1.05); }
         .theme-btn.active-theme .theme-icon { border: 3px solid var(--btn-color); padding: 2px; }
         
-        /* Utility */
         .hide { display: none !important; }
         .custom-scrollbar::-webkit-scrollbar { height: 0px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-5 relative">
 
-    <!-- Header Logo -->
     <div class="absolute top-8 left-6 md:left-10 z-40">
         <span class="text-2xl font-black tracking-tight drop-shadow-md">VERTEX</span>
     </div>
 
-    <!-- Theme Selector Trigger -->
     <button onclick="toggleThemeSheet(true)" class="absolute top-8 right-6 md:right-10 z-40 bg-white/20 backdrop-blur-lg border border-white/30 px-4 py-2.5 rounded-full text-xs font-bold shadow-sm flex items-center gap-2 hover:bg-white/30 transition-colors">
         <i class="fa-solid fa-palette"></i> Themes
     </button>
 
-    <!-- MAIN AUTHENTICATION CARD -->
     <div class="auth-card w-full max-w-[380px] p-8 md:p-10 relative z-10">
         
         <div class="text-center mb-8">
-            <h2 id="formTitle" class="text-3xl font-bold tracking-tight">Sign In</h2>
+            <h2 id="formTitle" class="text-3xl font-bold tracking-tight">Enter Nexus</h2>
             <p id="formSubtitle" class="text-sm font-medium mt-1 opacity-70">Access your system</p>
         </div>
 
         <form id="authForm" class="space-y-4">
+            <!-- Simplified inputs for Bypass Mode -->
+            <input type="text" id="nameInput" class="ios-input" placeholder="Your Name or Alias" required>
             
-            <div id="nameContainer" class="hide">
-                <input type="text" id="nameInput" class="ios-input" placeholder="Full Name" autocomplete="name">
-            </div>
-
-            <input type="email" id="emailInput" class="ios-input" placeholder="Email Address" required autocomplete="email">
-            <input type="password" id="passwordInput" class="ios-input" placeholder="Password" required autocomplete="current-password">
-
-            <button type="submit" id="submitBtn" class="ios-btn mt-6">
-                <span id="btnText">Continue</span>
+            <button type="submit" class="ios-btn mt-6">
+                <span id="btnText">Launch Dashboard</span>
             </button>
-            
-            <div id="msgBox" class="hide text-xs font-bold text-center mt-4 p-3 rounded-xl bg-red-100 text-red-600 border border-red-200"></div>
         </form>
-
-        <div class="text-center text-sm mt-8 font-medium">
-            <span id="toggleText" class="opacity-70">New to Vertex?</span> 
-            <button onclick="toggleMode()" id="toggleBtn" class="font-bold ml-1 transition-colors hover:opacity-80" style="color: var(--btn-color);">Sign Up</button>
-        </div>
     </div>
 
     <!-- FULL SCREEN CINEMATIC ACTION -->
-    <div id="cinematicOverlay" class="flex items-center justify-center flex-col">
+    <div id="cinematicOverlay">
         <div class="action-gif-container">
             <img id="actionGifEl" class="action-gif" src="" alt="Action Animation">
         </div>
-        <div class="text-white mt-6 text-sm font-bold tracking-widest uppercase animate-pulse">Establishing Connection...</div>
+        <div class="text-white mt-6 text-sm font-bold tracking-widest uppercase animate-pulse">Bypassing Security...</div>
     </div>
 
-    <!-- IOS STYLE THEME SELECTOR -->
+    <!-- THEME SELECTOR -->
     <div id="themeSheet" class="theme-sheet">
         <div class="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-6 cursor-pointer" onclick="toggleThemeSheet(false)"></div>
         <div class="flex justify-between items-center mb-6 px-2">
             <h3 class="text-lg font-bold text-gray-900">Choose Environment</h3>
-            <button onclick="toggleThemeSheet(false)" class="text-sm font-bold text-blue-500">Done</button>
+            <button type="button" onclick="toggleThemeSheet(false)" class="text-sm font-bold text-blue-500">Done</button>
         </div>
-        
-        <!-- Theme List -->
-        <div class="flex gap-4 overflow-x-auto pb-4 custom-scrollbar px-2" id="themeContainer">
-            <!-- Populated by JavaScript -->
-        </div>
+        <div class="flex gap-4 overflow-x-auto pb-4 custom-scrollbar px-2" id="themeContainer"></div>
     </div>
 
     <script>
-        // Supabase Initialization
-        const supabaseUrl = 'https://memwikauqfvctwbrgmgf.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lbXdpa2F1cWZ2Y3R3YnJnbWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1Njc4NDcsImV4cCI6MjEwNTE0Mzg0N30.f1MbDY5DGxaYwVnOBrN8N0ODWe9ZpYGmiL2NfvyIBCo';
-        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
-
-        /* ========================================================
-           1. MASTER THEME CONFIGURATION
-        ======================================================== */
         const themes = {
             'default': {
-                name: 'System', 
-                bg: 'https://images.unsplash.com/photo-1695221370216-081498b5ee42?q=80&w=2000', // Apple Fluid
-                icon: 'https://images.unsplash.com/photo-1695221370216-081498b5ee42?q=80&w=200',
-                actionGif: 'https://media.tenor.com/On7kvXhzmL4AAAAi/loading-gif.gif',
-                btnColor: '#007AFF', mode: 'light'
+                name: 'System', bg: 'https://images.unsplash.com/photo-1695221370216-081498b5ee42?q=80&w=2000', 
+                icon: 'https://images.unsplash.com/photo-1695221370216-081498b5ee42?q=80&w=200', actionGif: 'https://media.tenor.com/On7kvXhzmL4AAAAi/loading-gif.gif', btnColor: '#007AFF', mode: 'light'
             },
             'spiderman': {
-                name: 'Spidey', 
-                bg: 'https://images.alphacoders.com/946/946124.jpg', 
-                icon: 'https://i.pinimg.com/736x/89/3b/b1/893bb127ffde61b7fcd2649b3806fb60.jpg',
-                actionGif: 'https://media.tenor.com/bK1zE3e6zF0AAAAi/spiderman-web.gif',
-                btnColor: '#dc2626', mode: 'dark'
+                name: 'Spidey', bg: 'https://images.alphacoders.com/946/946124.jpg', 
+                icon: 'https://i.pinimg.com/736x/89/3b/b1/893bb127ffde61b7fcd2649b3806fb60.jpg', actionGif: 'https://media.tenor.com/bK1zE3e6zF0AAAAi/spiderman-web.gif', btnColor: '#dc2626', mode: 'dark'
             },
             'batman': {
-                name: 'Batman', 
-                bg: 'https://images.alphacoders.com/123/1230114.jpg', 
-                icon: 'https://i.pinimg.com/736x/1a/10/37/1a10375dc162dc4a8f9446f04c636cb0.jpg',
-                actionGif: 'https://media.tenor.com/PZt7H55-P5gAAAAi/batman-bat-signal.gif',
-                btnColor: '#eab308', mode: 'dark'
+                name: 'Batman', bg: 'https://images.alphacoders.com/123/1230114.jpg', 
+                icon: 'https://i.pinimg.com/736x/1a/10/37/1a10375dc162dc4a8f9446f04c636cb0.jpg', actionGif: 'https://media.tenor.com/PZt7H55-P5gAAAAi/batman-bat-signal.gif', btnColor: '#eab308', mode: 'dark'
             },
             'superman': {
-                name: 'Superman', 
-                bg: 'https://images.alphacoders.com/264/264509.jpg', 
-                icon: 'https://i.pinimg.com/736x/bc/50/be/bc50be25d8d09cb2d2c125608cc0edde.jpg',
-                actionGif: 'https://media.tenor.com/pZ2D8K5Z_2gAAAAi/superman-laser.gif',
-                btnColor: '#2563eb', mode: 'dark'
+                name: 'Superman', bg: 'https://images.alphacoders.com/264/264509.jpg', 
+                icon: 'https://i.pinimg.com/736x/bc/50/be/bc50be25d8d09cb2d2c125608cc0edde.jpg', actionGif: 'https://media.tenor.com/pZ2D8K5Z_2gAAAAi/superman-laser.gif', btnColor: '#2563eb', mode: 'dark'
             },
             'naruto': {
-                name: 'Naruto', 
-                bg: 'https://images2.alphacoders.com/131/1314488.jpeg', 
-                icon: 'https://i.pinimg.com/736x/db/51/97/db51978d38bf3b0d2381f96e4ec6f284.jpg',
-                actionGif: 'https://media.tenor.com/71233F62mXMAAAAi/naruto-rasengan.gif',
-                btnColor: '#f97316', mode: 'dark'
+                name: 'Naruto', bg: 'https://images2.alphacoders.com/131/1314488.jpeg', 
+                icon: 'https://i.pinimg.com/736x/db/51/97/db51978d38bf3b0d2381f96e4ec6f284.jpg', actionGif: 'https://media.tenor.com/71233F62mXMAAAAi/naruto-rasengan.gif', btnColor: '#f97316', mode: 'dark'
             },
             'onepiece': {
-                name: 'One Piece', 
-                bg: 'https://images.alphacoders.com/132/1321049.jpeg', 
-                icon: 'https://i.pinimg.com/736x/95/92/7f/95927fa83315a6b0c6a5fc1a6cebf257.jpg',
-                actionGif: 'https://media.tenor.com/39I7m8rFq_4AAAAi/luffy-gear.gif',
-                btnColor: '#ef4444', mode: 'dark'
+                name: 'One Piece', bg: 'https://images.alphacoders.com/132/1321049.jpeg', 
+                icon: 'https://i.pinimg.com/736x/95/92/7f/95927fa83315a6b0c6a5fc1a6cebf257.jpg', actionGif: 'https://media.tenor.com/39I7m8rFq_4AAAAi/luffy-gear.gif', btnColor: '#ef4444', mode: 'dark'
             },
             'f1race': {
-                name: 'F1 Racing', 
-                bg: 'https://images.unsplash.com/photo-1534484080702-861cda411808?q=80&w=2000', 
-                icon: 'https://i.pinimg.com/736x/cb/09/b7/cb09b7c897f7422f2187bf59e6f30ba4.jpg',
-                actionGif: 'https://media.tenor.com/4q-v1lA-KfkAAAAi/f1-formula-one.gif',
-                btnColor: '#ef4444', mode: 'dark'
+                name: 'F1 Racing', bg: 'https://images.unsplash.com/photo-1534484080702-861cda411808?q=80&w=2000', 
+                icon: 'https://i.pinimg.com/736x/cb/09/b7/cb09b7c897f7422f2187bf59e6f30ba4.jpg', actionGif: 'https://media.tenor.com/4q-v1lA-KfkAAAAi/f1-formula-one.gif', btnColor: '#ef4444', mode: 'dark'
             },
             'cricket': {
-                name: 'Cricket', 
-                bg: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2000', 
-                icon: 'https://i.pinimg.com/736x/d6/11/a9/d611a938c4d21e84df2d1bce4750e6ad.jpg',
-                actionGif: 'https://media.tenor.com/83p8vjTjP4MAAAAi/cricket-ball.gif',
-                btnColor: '#0ea5e9', mode: 'dark'
+                name: 'Cricket', bg: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2000', 
+                icon: 'https://i.pinimg.com/736x/d6/11/a9/d611a938c4d21e84df2d1bce4750e6ad.jpg', actionGif: 'https://media.tenor.com/83p8vjTjP4MAAAAi/cricket-ball.gif', btnColor: '#0ea5e9', mode: 'dark'
             },
             'football': {
-                name: 'Football', 
-                bg: 'https://images.unsplash.com/photo-1518605368461-1ee7c688e104?q=80&w=2000', 
-                icon: 'https://i.pinimg.com/736x/ea/5e/51/ea5e51cd55516a24ed4ea52e00e008eb.jpg',
-                actionGif: 'https://media.tenor.com/Qe1v8p-q-P8AAAAi/ronaldo-siiu.gif',
-                btnColor: '#22c55e', mode: 'dark'
+                name: 'Football', bg: 'https://images.unsplash.com/photo-1518605368461-1ee7c688e104?q=80&w=2000', 
+                icon: 'https://i.pinimg.com/736x/ea/5e/51/ea5e51cd55516a24ed4ea52e00e008eb.jpg', actionGif: 'https://media.tenor.com/Qe1v8p-q-P8AAAAi/ronaldo-siiu.gif', btnColor: '#22c55e', mode: 'dark'
             }
         };
 
         let currentThemeId = 'default';
-        let isLoginMode = true;
 
-        /* ========================================================
-           2. ENGINE INITIALIZATION (Safe Execution)
-        ======================================================== */
         document.addEventListener('DOMContentLoaded', () => {
             renderThemeSelector();
             const savedTheme = localStorage.getItem('vertex_theme') || 'default';
             applyTheme(savedTheme);
 
-            // Bind Form Submit Safely
-            const form = document.getElementById('authForm');
-            if (form) {
-                form.addEventListener('submit', handleAuthProcess);
-            }
+            document.getElementById('authForm').addEventListener('submit', handleAuthProcess);
         });
 
-        /* ========================================================
-           3. UI & THEME LOGIC
-        ======================================================== */
         function renderThemeSelector() {
             const container = document.getElementById('themeContainer');
             container.innerHTML = '';
-            
             for (const [id, data] of Object.entries(themes)) {
                 const btn = document.createElement('div');
                 btn.className = `theme-btn ${id === currentThemeId ? 'active-theme' : ''}`;
                 btn.id = `theme-btn-${id}`;
-                // Using a closure to prevent 'event' bugs
                 btn.onclick = () => applyTheme(id);
-                
                 btn.innerHTML = `
                     <div class="theme-icon" style="background-image: url('${data.icon}');"></div>
                     <span class="text-[10px] font-bold text-gray-700 text-center">${data.name}</span>
@@ -308,12 +206,11 @@
         }
 
         function applyTheme(id) {
-            if (!themes[id]) id = 'default'; // Fallback for safety
+            if (!themes[id]) id = 'default';
             currentThemeId = id;
             const data = themes[id];
             const root = document.documentElement;
 
-            // Handle Light/Dark Mode Glass
             if (data.mode === 'dark') {
                 root.style.setProperty('--glass-bg', 'rgba(10, 10, 10, 0.6)');
                 root.style.setProperty('--glass-border', 'rgba(255, 255, 255, 0.1)');
@@ -326,11 +223,9 @@
                 root.style.setProperty('--input-bg', 'rgba(255, 255, 255, 0.5)');
             }
 
-            // Apply Variables
             root.style.setProperty('--bg-image', `url('${data.bg}')`);
             root.style.setProperty('--btn-color', data.btnColor);
             
-            // Update UI Active State Safely
             document.querySelectorAll('.theme-btn').forEach(el => el.classList.remove('active-theme'));
             const activeBtn = document.getElementById(`theme-btn-${id}`);
             if (activeBtn) activeBtn.classList.add('active-theme');
@@ -344,87 +239,22 @@
             else sheet.classList.remove('active');
         }
 
-        function toggleMode() {
-            isLoginMode = !isLoginMode;
-            const nameContainer = document.getElementById('nameContainer');
-            const nameInput = document.getElementById('nameInput');
-            const btnText = document.getElementById('btnText');
-            const formTitle = document.getElementById('formTitle');
-            const subtitle = document.getElementById('formSubtitle');
-            const toggleText = document.getElementById('toggleText');
-            const toggleBtn = document.getElementById('toggleBtn');
-            const msgBox = document.getElementById('msgBox');
-
-            msgBox.classList.add('hide');
-
-            if (isLoginMode) {
-                nameContainer.classList.add('hide');
-                nameInput.removeAttribute('required');
-                btnText.innerText = "Continue";
-                formTitle.innerText = "Sign In";
-                subtitle.innerText = "Access your system";
-                toggleText.innerText = "New to Vertex?";
-                toggleBtn.innerText = "Sign Up";
-            } else {
-                nameContainer.classList.remove('hide');
-                nameInput.setAttribute('required', 'true');
-                btnText.innerText = "Create Account";
-                formTitle.innerText = "Sign Up";
-                subtitle.innerText = "Join the next generation";
-                toggleText.innerText = "Already an agent?";
-                toggleBtn.innerText = "Sign In";
-            }
-        }
-
-        /* ========================================================
-           4. AUTHENTICATION & FULL SCREEN ACTION LOGIC
-        ======================================================== */
         async function handleAuthProcess(e) {
             e.preventDefault();
-            
-            const email = document.getElementById('emailInput').value;
-            const password = document.getElementById('passwordInput').value;
             const name = document.getElementById('nameInput').value;
-            const msgBox = document.getElementById('msgBox');
             
-            msgBox.classList.add('hide');
+            // Save Dummy User for Dashboard
+            localStorage.setItem('vertex_dummy_user', name);
 
-            // 1. TRIGGER FULL SCREEN ANIMATION
+            // Turn on Full Screen Animation
             const overlay = document.getElementById('cinematicOverlay');
-            const gifEl = document.getElementById('actionGifEl');
-            
-            // Set correct action GIF based on current theme
-            gifEl.src = themes[currentThemeId].actionGif;
-            overlay.classList.add('active'); // Fade in overlay
+            document.getElementById('actionGifEl').src = themes[currentThemeId].actionGif;
+            overlay.classList.add('active'); 
 
-            // 2. WAIT FOR ANIMATION THEN AUTHENTICATE
-            // Let the user enjoy the animation for exactly 2 seconds
-            setTimeout(async () => {
-                try {
-                    if (isLoginMode) {
-                        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-                        if (error) throw error;
-                    } else {
-                        const { error } = await supabaseClient.auth.signUp({ 
-                            email, password, options: { data: { full_name: name } } 
-                        });
-                        if (error) throw error;
-                    }
-                    
-                    // IF SUCCESS: Redirect to Dashboard
-                    window.location.href = '/dashboard.html';
-                    
-                } catch (error) {
-                    // IF ERROR: Hide animation overlay & show error
-                    overlay.classList.remove('active');
-                    
-                    // Small delay to let the overlay fade out smoothly before showing text
-                    setTimeout(() => {
-                        msgBox.innerText = error.message;
-                        msgBox.classList.remove('hide');
-                    }, 400);
-                }
-            }, 2000); // 2 Seconds Cinematic Delay
+            // Wait 2 Seconds and go to Dashboard directly
+            setTimeout(() => {
+                window.location.href = '/dashboard.html';
+            }, 2000); 
         }
     </script>
 </body>

@@ -2,299 +2,237 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>VERTEX | App Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VERTEX | Theme Showcase Dashboard</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --bg-image: url('https://images.unsplash.com/photo-1695221370216-081498b5ee42?q=80&w=2000');
-            --btn-color: #007AFF;
-            --nav-bg: rgba(20, 20, 20, 0.85);
+            --accent: #3b82f6; /* Superman Blue Default */
+            --bg-dark: #0f111a;
+            --glass-panel: rgba(25, 28, 41, 0.7);
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #000; color: #fff;
-            margin: 0; padding: 0; height: 100dvh; overflow: hidden;
-            display: flex; flex-direction: column; -webkit-font-smoothing: antialiased;
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 60%);
+            transition: all 0.5s ease;
         }
 
-        #app-background {
-            position: fixed; inset: 0; z-index: -2;
-            background-image: var(--bg-image); background-size: cover; background-position: center;
-            transition: background-image 0.8s ease;
-        }
-        .bg-overlay {
-            position: fixed; inset: 0; z-index: -1;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.95) 100%);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+        /* Glassmorphism Panels */
+        .glass-box {
+            background: var(--glass-panel);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
         }
 
-        .bento-card {
-            background: rgba(30, 30, 30, 0.5); border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 28px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease;
+        /* Center Character Glow & Float */
+        .mascot-container {
+            position: relative;
+            animation: float 4s ease-in-out infinite;
         }
-        .bento-card-small {
-            background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(255,255,255,0.08);
-            backdrop-filter: blur(20px); border-radius: 24px;
-            transition: all 0.2s ease;
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
         }
-        .bento-card-small:active { transform: scale(0.96); }
+        .ground-glow {
+            width: 300px; height: 30px;
+            background: var(--accent);
+            border-radius: 50%;
+            filter: blur(20px);
+            opacity: 0.5;
+            margin: -20px auto 0;
+            transform: rotateX(60deg);
+            transition: background 0.5s ease;
+        }
 
-        .ios-toggle {
-            position: relative; width: 44px; height: 24px;
-            background: rgba(255,255,255,0.2); border-radius: 100px;
-            cursor: pointer; transition: background 0.3s ease;
+        /* Progress Bars */
+        .stat-bar-bg {
+            width: 100%; height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 8px;
         }
-        .ios-toggle.active { background: var(--btn-color); }
-        .ios-toggle::after {
-            content: ''; position: absolute; top: 2px; left: 2px;
-            width: 20px; height: 20px; background: #fff; border-radius: 50%;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        .stat-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 10px;
+            box-shadow: 0 0 10px var(--accent);
+            transition: width 1s ease, background 0.5s ease, box-shadow 0.5s ease;
         }
-        .ios-toggle.active::after { transform: translateX(20px); }
 
-        .bottom-nav-container {
-            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-            width: 95%; max-width: 420px; z-index: 100;
+        /* Voice Control Wave */
+        .voice-wave {
+            width: 100%; height: 40px;
+            background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/858/wave.svg') center/cover;
+            opacity: 0.5; filter: drop-shadow(0 0 5px var(--accent));
         }
-        .bottom-nav {
-            background: var(--nav-bg); backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
-            border: 1px solid rgba(255,255,255,0.15); border-radius: 100px;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        }
-        .nav-btn {
-            position: relative; width: 45px; height: 45px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .nav-btn.active { color: #fff; background: rgba(255,255,255,0.1); transform: translateY(-4px); }
-        .nav-btn i { font-size: 18px; transition: transform 0.3s ease; }
-        .nav-btn.active i { color: var(--btn-color); transform: scale(1.1); filter: drop-shadow(0 0 8px var(--btn-color)); }
-        
-        .page-fade-enter { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        .scroll-area { overflow-y: auto; overflow-x: hidden; padding-bottom: 120px; }
-        .scroll-area::-webkit-scrollbar { display: none; } 
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body>
+<body class="h-screen w-screen flex flex-col md:flex-row p-4 md:p-6 gap-6 relative">
 
-    <div id="app-background"></div>
-    <div class="bg-overlay"></div>
-
-    <div class="flex flex-col h-full w-full max-w-lg mx-auto relative z-10">
-        
-        <header class="px-6 pt-14 pb-4 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <div class="relative">
-                    <img id="userAvatar" src="" class="w-12 h-12 rounded-full border-2 object-cover bg-black shadow-lg" style="border-color: var(--btn-color);" alt="Portfolio">
-                    <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-black rounded-full"></div>
-                </div>
-                <div>
-                    <h1 id="userName" class="text-xl font-black tracking-tight leading-tight text-white">Agent</h1>
-                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Level 1 Nexus</p>
-                </div>
-            </div>
-            
-            <button onclick="logout()" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/60 hover:bg-white/20 transition-colors">
-                <i class="fa-solid fa-arrow-right-from-bracket text-sm"></i>
-            </button>
-        </header>
-
-        <main id="app-content" class="flex-1 scroll-area px-6 pt-2"></main>
+    <!-- THEME SWITCHER (Top Right) -->
+    <div class="absolute top-6 right-6 z-50 flex gap-3 bg-black/40 p-2 rounded-full border border-white/10 backdrop-blur-md">
+        <button onclick="changeTheme('superman')" class="w-8 h-8 rounded-full bg-blue-600 border-2 border-transparent hover:border-white transition-all"></button>
+        <button onclick="changeTheme('spiderman')" class="w-8 h-8 rounded-full bg-red-600 border-2 border-transparent hover:border-white transition-all"></button>
+        <button onclick="changeTheme('naruto')" class="w-8 h-8 rounded-full bg-orange-500 border-2 border-transparent hover:border-white transition-all"></button>
+        <button onclick="changeTheme('batman')" class="w-8 h-8 rounded-full bg-yellow-500 border-2 border-transparent hover:border-white transition-all"></button>
     </div>
 
-    <!-- IOS BOTTOM NAVIGATION -->
-    <div class="bottom-nav-container">
-        <div class="bottom-nav">
-            <div onclick="navigate('home')" id="nav-home" class="nav-btn active"><i class="fa-solid fa-border-all"></i></div>
-            <div onclick="navigate('notes')" id="nav-notes" class="nav-btn"><i class="fa-solid fa-bolt"></i></div>
-            <div onclick="navigate('scheduler')" id="nav-scheduler" class="nav-btn"><i class="fa-solid fa-calendar-check"></i></div>
-            <div onclick="navigate('doubt')" id="nav-doubt" class="nav-btn"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-            <div onclick="navigate('integration')" id="nav-integration" class="nav-btn"><i class="fa-solid fa-plug"></i></div>
+    <!-- LEFT SIDEBAR (Navigation & Voice) -->
+    <aside class="glass-box w-full md:w-72 h-full flex flex-col p-6 z-10 hidden md:flex">
+        <div class="flex items-center gap-3 mb-12">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center font-black text-xl text-white shadow-[0_0_15px_var(--accent)]" style="background: var(--accent);">V</div>
+            <span class="text-2xl font-black tracking-widest">VERTEX</span>
         </div>
-    </div>
+
+        <nav class="flex-1 space-y-2">
+            <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-sm bg-white/5 border-l-4" style="border-color: var(--accent);">
+                <i class="fa-solid fa-border-all text-[var(--accent)] w-6 text-center"></i> Nexus Dashboard
+            </a>
+            <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-sm text-gray-400 hover:text-white transition-colors">
+                <i class="fa-solid fa-plug w-6 text-center"></i> Integration Hub
+            </a>
+            <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-sm text-gray-400 hover:text-white transition-colors">
+                <i class="fa-solid fa-calendar-check w-6 text-center"></i> Timeline
+            </a>
+        </nav>
+
+        <!-- Voice Control Widget (From Reference Image) -->
+        <div class="mt-auto bg-black/40 rounded-2xl p-5 border border-white/5 relative overflow-hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h4 class="font-bold text-sm">AI Agent</h4>
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            </div>
+            <div class="voice-wave mb-4"></div>
+            <button class="w-full py-3 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,0,0,0.3)]" style="background: var(--accent);">
+                <i class="fa-solid fa-microphone"></i> Hold to Speak
+            </button>
+        </div>
+    </aside>
+
+    <!-- CENTER STAGE (Theme Mascot Showcase) -->
+    <main class="flex-1 h-full flex flex-col items-center justify-center relative z-0">
+        
+        <!-- Header Text -->
+        <div class="absolute top-4 left-4 md:left-10 text-left w-full">
+            <div class="flex items-center gap-3">
+                <h1 id="themeTitle" class="text-4xl md:text-5xl font-black tracking-tight">Superman</h1>
+                <i class="fa-solid fa-shield text-[var(--accent)] text-2xl"></i>
+            </div>
+            <p class="text-gray-400 text-sm font-semibold tracking-widest uppercase mt-2">Active Environment</p>
+        </div>
+
+        <!-- Dynamic Character Image -->
+        <div class="mascot-container mt-10">
+            <!-- Images are transparent PNGs/GIFs for 3D effect -->
+            <img id="mascotImg" src="https://images.alphacoders.com/264/264509.jpg" class="h-[40vh] md:h-[60vh] object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]" style="border-radius: 20px; mix-blend-mode: screen;" alt="Mascot">
+            <div class="ground-glow"></div>
+        </div>
+
+        <!-- Bottom Controls (Overview / Power) -->
+        <div class="absolute bottom-10 flex gap-4 bg-black/40 p-2 rounded-full border border-white/10 backdrop-blur-md">
+            <button class="px-6 py-2 rounded-full text-sm font-bold bg-white/10 text-white">Overview</button>
+            <button class="px-6 py-2 rounded-full text-sm font-bold text-gray-400 hover:text-white">Modules</button>
+        </div>
+    </main>
+
+    <!-- RIGHT SIDEBAR (Learning MRI / Stats) -->
+    <aside class="glass-box w-full md:w-80 h-full p-6 md:p-8 flex flex-col justify-center gap-8 z-10">
+        
+        <div class="stat-block">
+            <div class="flex justify-between items-end mb-1">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Focus Level</span>
+                <span class="text-xl font-black">90%</span>
+            </div>
+            <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 90%;"></div></div>
+        </div>
+
+        <div class="stat-block">
+            <div class="flex justify-between items-end mb-1">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Knowledge Retention</span>
+                <span class="text-xl font-black">100%</span>
+            </div>
+            <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 100%;"></div></div>
+        </div>
+
+        <div class="stat-block">
+            <div class="flex justify-between items-end mb-1">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Speed & Accuracy</span>
+                <span class="text-xl font-black">85%</span>
+            </div>
+            <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 85%;"></div></div>
+        </div>
+
+        <div class="stat-block">
+            <div class="flex justify-between items-end mb-1">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Consistency</span>
+                <span class="text-xl font-black">80%</span>
+            </div>
+            <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div>
+        </div>
+
+        <div class="stat-block">
+            <div class="flex justify-between items-end mb-1">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Module Completion</span>
+                <span class="text-xl font-black">98%</span>
+            </div>
+            <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 98%;"></div></div>
+        </div>
+
+    </aside>
 
     <script>
-        const themes = {
-            'default': { bg: 'https://images.unsplash.com/photo-1695221370216-081498b5ee42?q=80&w=2000', btnColor: '#007AFF' },
-            'spiderman': { bg: 'https://images.alphacoders.com/946/946124.jpg', btnColor: '#dc2626' },
-            'batman': { bg: 'https://images.alphacoders.com/123/1230114.jpg', btnColor: '#eab308' },
-            'superman': { bg: 'https://images.alphacoders.com/264/264509.jpg', btnColor: '#2563eb' },
-            'naruto': { bg: 'https://images2.alphacoders.com/131/1314488.jpeg', btnColor: '#f97316' },
-            'onepiece': { bg: 'https://images.alphacoders.com/132/1321049.jpeg', btnColor: '#ef4444' },
-            'f1race': { bg: 'https://images.unsplash.com/photo-1534484080702-861cda411808?q=80&w=2000', btnColor: '#ef4444' },
-            'cricket': { bg: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2000', btnColor: '#0ea5e9' },
-            'football': { bg: 'https://images.unsplash.com/photo-1518605368461-1ee7c688e104?q=80&w=2000', btnColor: '#22c55e' }
+        // THEME ENGINE LOGIC
+        const themeData = {
+            'superman': {
+                title: 'Superman',
+                accent: '#3b82f6', // Blue
+                img: 'https://media.tenor.com/pZ2D8K5Z_2gAAAAi/superman-laser.gif'
+            },
+            'spiderman': {
+                title: 'Spider-Man',
+                accent: '#ef4444', // Red
+                img: 'https://media.tenor.com/bK1zE3e6zF0AAAAi/spiderman-web.gif'
+            },
+            'naruto': {
+                title: 'Naruto',
+                accent: '#f97316', // Orange
+                img: 'https://media.tenor.com/71233F62mXMAAAAi/naruto-rasengan.gif'
+            },
+            'batman': {
+                title: 'Batman',
+                accent: '#eab308', // Yellow
+                img: 'https://media.tenor.com/PZt7H55-P5gAAAAi/batman-bat-signal.gif'
+            }
         };
 
-        const Views = {
-            home: `
-                <div class="page-fade-enter space-y-4">
-                    <div class="bento-card p-6 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-[var(--btn-color)] rounded-full blur-[60px] opacity-20"></div>
-                        <h3 class="text-xs font-bold text-[var(--btn-color)] uppercase tracking-widest mb-1">Learning MRI</h3>
-                        <div class="text-4xl font-black text-white mb-6">92% <span class="text-sm font-medium text-gray-400">Retention</span></div>
-                        <div class="flex gap-3">
-                            <div class="flex-1 bg-black/50 rounded-2xl p-4 border border-white/5">
-                                <div class="text-xl font-bold text-white mb-1">14</div>
-                                <div class="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Modules</div>
-                            </div>
-                            <div class="flex-1 bg-black/50 rounded-2xl p-4 border border-white/5">
-                                <div class="text-xl font-bold text-white flex items-center gap-2">5 <i class="fa-solid fa-fire text-[var(--btn-color)] text-sm"></i></div>
-                                <div class="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Streak</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bento-card p-5 border-l-4" style="border-left-color: var(--btn-color);">
-                        <div class="flex gap-4 items-center">
-                            <div class="w-10 h-10 rounded-full bg-[var(--btn-color)]/20 flex items-center justify-center text-[var(--btn-color)]"><i class="fa-solid fa-brain"></i></div>
-                            <div>
-                                <h4 class="text-sm font-bold text-white">AI Suggestion</h4>
-                                <p class="text-xs text-gray-400 mt-0.5">Revise Quantum Physics today.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `,
-            notes: `... (Kept identical to previous for brevity) ...`,
-            scheduler: `... (Kept identical to previous for brevity) ...`,
-            doubt: `... (Kept identical to previous for brevity) ...`,
-            
-            // 🔥 THE NEW ULTIMATE INTEGRATION HUB 🔥
-            integration: `
-                <div class="page-fade-enter space-y-6">
-                    <div class="mb-4 mt-2">
-                        <h2 class="text-3xl font-black tracking-tight">Nexus Hub</h2>
-                        <p class="text-sm text-gray-400 mt-1 font-medium">Centralize your entire learning ecosystem</p>
-                    </div>
-
-                    <!-- 1. EDTECH PLATFORMS SECTION (The Masterstroke) -->
-                    <div>
-                        <h3 class="text-xs font-bold text-[var(--btn-color)] uppercase tracking-widest mb-3 px-1">Learning Platforms</h3>
-                        
-                        <div class="grid grid-cols-2 gap-3">
-                            <!-- Physics Wallah -->
-                            <div class="bento-card-small p-4 flex flex-col items-center text-center gap-2">
-                                <div class="w-12 h-12 rounded-full bg-yellow-500/10 text-yellow-500 flex items-center justify-center text-xl shadow-[0_0_15px_rgba(234,179,8,0.2)]">
-                                    <i class="fa-solid fa-atom"></i>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-bold text-white">PW</h4>
-                                    <p class="text-[10px] text-gray-400 mt-0.5">Lectures & Tests</p>
-                                </div>
-                                <button class="w-full mt-2 bg-[var(--btn-color)] text-white py-1.5 rounded-xl text-xs font-bold shadow-[0_4px_10px_rgba(0,0,0,0.3)] border border-[var(--btn-color)]">Active Sync</button>
-                            </div>
-
-                            <!-- YouTube -->
-                            <div class="bento-card-small p-4 flex flex-col items-center text-center gap-2">
-                                <div class="w-12 h-12 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center text-xl shadow-[0_0_15px_rgba(239,68,68,0.2)]">
-                                    <i class="fa-brands fa-youtube"></i>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-bold text-white">YouTube</h4>
-                                    <p class="text-[10px] text-gray-400 mt-0.5">Edu Playlists</p>
-                                </div>
-                                <button class="w-full mt-2 bg-white/10 text-white py-1.5 rounded-xl text-xs font-bold hover:bg-white/20 transition-colors">Connect</button>
-                            </div>
-
-                            <!-- Coursera -->
-                            <div class="bento-card-small p-4 flex flex-col items-center text-center gap-2">
-                                <div class="w-12 h-12 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center text-xl shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                                    <i class="fa-solid fa-graduation-cap"></i>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-bold text-white">Coursera</h4>
-                                    <p class="text-[10px] text-gray-400 mt-0.5">Track Courses</p>
-                                </div>
-                                <button class="w-full mt-2 bg-white/10 text-white py-1.5 rounded-xl text-xs font-bold hover:bg-white/20 transition-colors">Connect</button>
-                            </div>
-
-                            <!-- Udemy -->
-                            <div class="bento-card-small p-4 flex flex-col items-center text-center gap-2">
-                                <div class="w-12 h-12 rounded-full bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl shadow-[0_0_15px_rgba(168,85,247,0.2)]">
-                                    <i class="fa-solid fa-laptop-code"></i>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-bold text-white">Udemy</h4>
-                                    <p class="text-[10px] text-gray-400 mt-0.5">Sync Progress</p>
-                                </div>
-                                <button class="w-full mt-2 bg-white/10 text-white py-1.5 rounded-xl text-xs font-bold hover:bg-white/20 transition-colors">Connect</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2. WORKSPACE TOOLS SECTION -->
-                    <div>
-                        <h3 class="text-xs font-bold text-[var(--btn-color)] uppercase tracking-widest mb-3 px-1 mt-6">Workspace Tools</h3>
-                        <div class="space-y-3">
-                            <div class="bento-card p-4 flex items-center justify-between">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-lg text-blue-400 border border-white/10"><i class="fa-brands fa-google-drive"></i></div>
-                                    <div>
-                                        <h4 class="text-sm font-bold text-white">Google Drive</h4>
-                                        <p class="text-[10px] text-gray-400">Import PDFs & Docs</p>
-                                    </div>
-                                </div>
-                                <div class="ios-toggle" onclick="this.classList.toggle('active')"></div>
-                            </div>
-
-                            <div class="bento-card p-4 flex items-center justify-between">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-lg text-gray-200 border border-white/10"><i class="fa-solid fa-cube"></i></div>
-                                    <div>
-                                        <h4 class="text-sm font-bold text-white">Notion</h4>
-                                        <p class="text-[10px] text-gray-400">Export AI Notes</p>
-                                    </div>
-                                </div>
-                                <button class="bg-white/10 text-white px-4 py-1.5 rounded-full text-[10px] font-bold border border-white/20">Connect</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `
-        };
-
-        // ... (Keep the identical routing functions: navigate, initApp, logout) ...
-        // Redefining them here for completeness
-        function navigate(tab) {
-            // Using a simple fallback for notes/scheduler/doubt so they don't break
-            const fallbackHTML = `<div class="page-fade-enter h-full flex flex-col items-center justify-center pt-16"><i class="fa-solid fa-code text-4xl text-[var(--btn-color)] mb-4"></i><h2 class="text-2xl font-black">Module Active</h2><p class="text-sm text-gray-400">Engine running.</p></div>`;
-            
-            document.getElementById('app-content').innerHTML = Views[tab] || fallbackHTML;
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`nav-${tab}`).classList.add('active');
-        }
-
-        function initApp() {
-            if(window.history.replaceState) window.history.replaceState(null, null, window.location.pathname);
-            const savedThemeId = localStorage.getItem('vertex_theme') || 'default';
-            const data = themes[savedThemeId] || themes['default'];
+        function changeTheme(themeKey) {
+            const data = themeData[themeKey];
             const root = document.documentElement;
-            root.style.setProperty('--bg-image', `url('${data.bg}')`);
-            root.style.setProperty('--btn-color', data.btnColor);
-            const rawName = localStorage.getItem('vertex_dummy_user') || 'Agent L';
-            document.getElementById('userName').innerText = rawName.toUpperCase();
-            document.getElementById('userAvatar').src = `https://api.dicebear.com/7.x/notionists/svg?seed=${rawName}&backgroundColor=transparent`;
-            navigate('integration');
-        }
+            
+            // Change Colors
+            root.style.setProperty('--accent', data.accent);
+            
+            // Change Text & Image
+            document.getElementById('themeTitle').innerText = data.title;
+            document.getElementById('mascotImg').src = data.img;
 
-        function logout() {
-            localStorage.removeItem('vertex_dummy_user');
-            window.location.href = 'auth.html'; 
+            // Change Ambient Background Glow
+            document.body.style.backgroundImage = `radial-gradient(circle at 50% 50%, ${data.accent}22 0%, transparent 60%)`;
         }
-
-        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
